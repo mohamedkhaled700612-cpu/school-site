@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رفع النتائج - مدرسة البتانون</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+body{font-family:Tahoma;background:#f0f2f5;margin:0;padding:20px}
+.card{max-width:600px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+input,select,button{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;font-size:16px;box-sizing:border-box}
+button{background:#1a73e8;color:#fff;border:none;cursor:pointer}
+button:hover{background:#1558b0}
+.hidden{display:none}
+.footer{text-align:center;margin-top:20px;color:#888;font-size:14px}
+</style>
+</head>
+<body>
+<div class="card" id="loginCard">
+<h2>دخول الإدارة</h2>
+<input type="email" id="email" placeholder="admin@batanoun.com" value="admin@batanoun.com">
+<input type="password" id="password" placeholder="باسورد Firebase">
+<button onclick="login()">دخول</button>
+<p id="loginErr" style="color:red"></p>
+</div>
+
+<div class="card hidden" id="uploadCard">
+<h2>رفع نتيجة</h2>
+<select id="grade">
+<option value="grade7">الصف الأول الإعدادي</option>
+<option value="grade8">الصف الثاني الإعدادي</option>
+<option value="grade9">الصف الثالث الإعدادي</option>
+</select>
+<input id="seat" placeholder="رقم الجلوس">
+<input id="name" placeholder="اسم الطالب">
+<input id="arabic" type="number" placeholder="عربي">
+<input id="math" type="number" placeholder="رياضيات">
+<input id="english" type="number" placeholder="إنجليزي">
+<input id="science" type="number" placeholder="علوم">
+<input id="sst" type="number" placeholder="دراسات">
+<button onclick="upload()">رفع</button>
+<p id="msg"></p>
+<button onclick="logout()" style="background:#888">خروج</button>
+</div>
+
+<p class="footer">made by mohamed khaled</p>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",
+  authDomain: "school-d50aa.firebaseapp.com",
+  projectId: "school-d50aa",
+  storageBucket: "school-d50aa.firebasestorage.app",
+  messagingSenderId: "14520467716",
+  appId: "1:14520467716:web:a9874d7152ab6e4b255051",
+  measurementId: "G-YHFXR5GZFZ"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+async function login(){
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const err = document.getElementById('loginErr');
+  err.textContent = "";
+  try{
+    await auth.signInWithEmailAndPassword(email, password);
+    document.getElementById('loginCard').classList.add('hidden');
+    document.getElementById('uploadCard').classList.remove('hidden');
+  }catch(e){
+    err.textContent = "بيانات الدخول غير صحيحة: " + e.message;
+  }
+}
+async function upload(){
+  const grade = document.getElementById('grade').value;
+  const seat = document.getElementById('seat').value.trim();
+  const name = document.getElementById('name').value.trim();
+  const msg = document.getElementById('msg');
+  if(!seat || !name){ msg.textContent="اكمل رقم الجلوس والاسم"; return; }
+  const data = {
+    name: name,
+    grade: grade,
+    arabic: Number(document.getElementById('arabic').value||0),
+    math: Number(document.getElementById('math').value||0),
+    english: Number(document.getElementById('english').value||0),
+    science: Number(document.getElementById('science').value||0),
+    sst: Number(document.getElementById('sst').value||0),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  data.total = data.arabic+data.math+data.english+data.science+data.sst;
+  try{
+    await db.collection("results").doc(grade+"_"+seat).set(data);
+    msg.style.color="green";
+    msg.textContent="تم الرفع بنجاح";
+  }catch(e){
+    msg.style.color="red";
+    msg.textContent="خطأ: "+e.message;
+  }
+}
+function logout(){ auth.signOut().then(()=>location.reload()); }
+</script>
+</body>
+</html>
