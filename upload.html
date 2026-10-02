@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>رفع النتائج - Excel</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<style>*{box-sizing:border-box;font-family:Tahoma;margin:0;padding:0}body{background:#0a1f44;color:#fff;padding:20px}.box{max-width:600px;margin:20px auto;background:#fff;color:#222;padding:25px;border-radius:15px}select,input{width:100%;padding:12px;margin:8px 0;border:2px solid #ddd;border-radius:10px;font-size:15px}button{padding:12px;width:100%;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:16px;margin:6px 0}#msg{margin-top:12px;padding:10px;border-radius:8px;background:#f1f5f9;min-height:40px;font-size:14px}</style>
+</head>
+<body>
+<h2 style="text-align:center">📤 رفع النتائج من Excel</h2>
+<div class="box">
+<select id="grade"><option value="1">الصف الأول الثانوي</option><option value="2">الصف الثاني الثانوي</option><option value="3">الصف الثالث الثانوي</option></select>
+<input type="file" id="file" accept=".xlsx,.xls,.csv">
+<button id="previewBtn" style="background:#0a1f44;color:#fff">👁️ معاينة الملف</button>
+<button id="uploadBtn" style="background:#16a34a;color:#fff" disabled>✅ تأكيد الرفع</button>
+<button id="delBtn" style="background:#dc2626;color:#fff">🗑️ مسح كل نتائج هذا الصف</button>
+<div id="msg">اختر الصف والملف</div>
+<a href="index.html" style="display:block;text-align:center;margin-top:10px">رجوع للرئيسية</a>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",authDomain:"school-d50aa.firebaseapp.com",projectId:"school-d50aa",storageBucket:"school-d50aa.firebasestorage.app",messagingSenderId:"14520467716",appId:"1:14520467716:web:a9874d7152ab6e4b255051"};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const ADMIN_EMAILS=["admin@school.com"];
+const sel=document.getElementById('grade'), fileInp=document.getElementById('file'), msg=document.getElementById('msg'), previewBtn=document.getElementById('previewBtn'), uploadBtn=document.getElementById('uploadBtn'), delBtn=document.getElementById('delBtn');
+let rows=[];
+function setMsg(t){msg.innerHTML=t;}
+function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function normalizeSeat(s){return String(s??"").trim().replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));}
+function isSeatCol(h){return /جلوس|seat/i.test(h);}
+function isNameCol(h){return /اسم|name/i.test(h);}
+onAuthStateChanged(auth,u=>{if(!u||!ADMIN_EMAILS.includes(u.email)){location.href="index.html";}});
+previewBtn.onclick=()=>{
+let f=fileInp.files[0]; if(!f) return setMsg("اختر ملف الأول");
+let reader=new FileReader();
+reader.onload=e=>{
+let wb=XLSX.read(e.target.result,{type:'binary'});
+let ws=wb.Sheets[wb.SheetNames[0]];
+let data=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+let hi=data.findIndex(r=>{let t=r.map(c=>String(c).trim());return t.some(isSeatCol)&&t.some(isNameCol);});
+if(hi<0){
+let found=(data[0]||[]).map(c=>String(c).trim()).filter(c=>c).join("، ");
+return setMsg("❌ مش لاقي عمود (رقم الجلوس) وعمود (الاسم). الأعمدة اللي لقيتها في أول صف: "+esc(found||"لا يوجد"));
+}
+let headers=data[hi].map(h=>String(h).trim());
+let si=headers.findIndex(isSeatCol);
+let ni=headers.findIndex(isNameCol);
+rows=data.slice(hi+1).filter(r=>String(r[si]??"").trim()!==""&&String(r[ni]??"").trim()!=="").map(r=>{
+let o={seat:normalizeSeat(r[si]),name:String(r[ni]).trim(),subjects:{},total:""};
+headers.forEach((h,i)=>{if(i!==si&&i!==ni&&h!==""){if(h.includes("المجموع")&&!o.total)o.total=String(r[i]);o.subjects[h]=String(r[i]);}});
+return o;});
+if(!rows.length) return setMsg("❌ لقيت العناوين بس مفيش بيانات طلبة تحتها");
+uploadBtn.disabled=false;
+setMsg("✅ جاهز: "+rows.length+" طالب | الأعمدة: "+esc(headers.filter(h=>h).join("، ")));
+};
+reader.readAsBinaryString(f);
+};
+uploadBtn.onclick=async()=>{
+if(!rows.length) return;
+let grade=sel.value, gradeName=sel.selectedOptions[0].text;
+if(!confirm("هتمسح نتائج "+gradeName+" القديمة وترفع "+rows.length+" نتيجة جديدة. متأكد؟")) return;
+uploadBtn.disabled=true; previewBtn.disabled=true;
+try{
+setMsg("جاري مسح القديم...");
+let old=await getDocs(query(collection(db,"results"),where("grade","==",grade)));
+for(let d of old.docs) await deleteDoc(doc(db,"results",d.id));
+setMsg("جاري رفع "+rows.length+" نتيجة...");
+let n=0;
+for(let i=0;i<rows.length;i+=400){
+let batch=rows.slice(i,i+400);
+await Promise.all(batch.map(r=>addDoc(collection(db,"results"),{seat:r.seat,name:r.name,total:r.total,subjects:r.subjects,grade:grade,createdAt:new Date().toISOString()})));
+n+=batch.length; setMsg("تم رفع "+n+" من "+rows.length+"...");
+}
+setMsg("✅ خلص! اترفع "+rows.length+" نتيجة لـ "+esc(gradeName));
+rows=[]; fileInp.value="";
+}catch(e){setMsg("❌ خطأ: "+esc(e.message));}
+uploadBtn.disabled=false; previewBtn.disabled=false;
+};
+delBtn.onclick=async()=>{
+let grade=sel.value, gradeName=sel.selectedOptions[0].text;
+if(!confirm("⚠️ متأكد؟ هتمسح كل نتائج "+gradeName+" نهائيا ومش هترجع")) return;
+delBtn.disabled=true; setMsg("جاري المسح...");
+try{
+let qs=await getDocs(query(collection(db,"results"),where("grade","==",grade)));
+for(let d of qs.docs) await deleteDoc(doc(db,"results",d.id));
+setMsg("✅ اتمسح "+qs.size+" نتيجة من "+esc(gradeName));
+}catch(e){setMsg("❌ خطأ: "+esc(e.message));}
+delBtn.disabled=false;
+};
+</script>
+</body>
+</html>
