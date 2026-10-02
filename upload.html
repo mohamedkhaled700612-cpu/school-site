@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>رفع نتائج البتانون</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>body{font-family:Tahoma;background:#0a1f44;color:#fff;padding:20px;text-align:center}.box{background:#fff;color:#222;max-width:520px;margin:20px auto;padding:22px;border-radius:12px}button{background:#d4a017;border:none;padding:13px;width:100%;border-radius:8px;font-weight:bold;cursor:pointer;font-size:16px}#s{margin-top:12px;font-weight:bold}</style>
+</head>
+<body>
+<h3>رفع كشف الدرجات - البتانون</h3>
+<div class="box">
+<input type="file" id="f" accept=".xlsx,.xls,.csv">
+<button onclick="up()">رفع الكشف</button>
+<div id="s"></div>
+</div>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",authDomain:"school-d50aa.firebaseapp.com",projectId:"school-d50aa",storageBucket:"school-d50aa.firebasestorage.app",messagingSenderId:"14520467716",appId:"1:14520467716:web:a9874d7152ab6e4b255051"});
+const db=firebase.firestore();
+const SUBS=["اللغة العربية","اللغة الأجنبية الأولى","الرياضيات","العلوم المتكاملة","التاريخ","الفلسفة والمنطق","اللغة الأجنبية الثانية","التربية الدينية","البرمجة وعلوم الحاسب","المجموع"];
+async function up(){
+const file=document.getElementById('f').files[0]; if(!file) return alert("اختار الملف");
+document.getElementById('s').innerText="جاري القراءة...";
+const buf=await file.arrayBuffer(); const wb=XLSX.read(buf); const ws=wb.Sheets[wb.SheetNames[0]]; const rows=XLSX.utils.sheet_to_json(ws);
+let c=0;
+for(const r of rows){
+let seat=String(r["رقم الجلوس"]||"").trim(); let name=String(r["الاسم"]||"").trim(); if(!seat||!name) continue;
+let subjects={}; SUBS.forEach(k=>{ if(r[k]!==undefined && r[k]!=="") subjects[k]=String(r[k]); });
+await db.collection("results").add({seat:seat,name:name,subjects:subjects,total:subjects["المجموع"]||"",createdAt:Date.now()});
+c++; document.getElementById('s').innerText="تم رفع "+c+" طالب...";
+}
+document.getElementById('s').innerText="تم بنجاح: "+c+" طالب"; alert("خلص ✅ "+c);
+}
+</script>
+</body>
+</html>
