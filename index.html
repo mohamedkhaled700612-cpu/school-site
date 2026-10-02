@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مدرسة البتانون الثانوية المطورة</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Arial;margin:0;padding:0}
+:root{--navy:#0a1f44;--gold:#d4a017;--bg:#f1f5f9}
+body{background:var(--navy);min-height:100vh}
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0a1f44 0%,#1e3a6e 100%)}
+.login-box{background:#fff;padding:35px 30px;border-radius:20px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-box img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);margin-bottom:15px}
+.login-box h1{color:var(--navy);font-size:22px;margin-bottom:5px}
+.login-box p{color:#64748b;font-size:14px;margin-bottom:15px}
+input,textarea{width:100%;padding:12px;margin:8px 0;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;outline:none;transition:.2s}
+input:focus,textarea:focus{border-color:var(--gold)}
+.btn{padding:13px;border-radius:10px;border:none;font-weight:bold;cursor:pointer;background:var(--gold);color:var(--navy);width:100%;margin-top:10px;font-size:16px;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(212,160,23,.4)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-del{background:#ef4444;color:#fff;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;margin-top:8px;font-size:14px}
+#dash{display:none;flex-direction:column;min-height:100vh;background:var(--bg)}
+.header{background:var(--navy);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.header.user{display:flex;align-items:center;gap:12px}
+.badge{background:var(--gold);color:var(--navy);padding:5px 14px;border-radius:20px;font-size:13px;font-weight:bold}
+.logout-btn{background:rgba(255,255,255,.15);color:#fff;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-weight:bold}
+.logout-btn:hover{background:rgba(255,255,255,.25)}
+.hero{background:linear-gradient(135deg,var(--navy),#1e3a6e);color:#fff;text-align:center;padding:40px 20px}
+.hero img{width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin-bottom:12px}
+.hero h2{font-size:24px;margin-bottom:5px}
+.hero p{opacity:.8;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;background:#fff;padding:12px 15px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08);scrollbar-width:none}
+.tabs span{padding:10px 20px;background:#f1f5f9;border-radius:25px;cursor:pointer;white-space:nowrap;font-weight:600;font-size:14px;transition:.2s;flex-shrink:0}
+.tabs span:hover{background:#e2e8f0}
+.tabs span.on{background:var(--navy);color:#fff}
+.main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:20px 15px}
+.card{background:#fff;padding:22px;border-radius:16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card h3{color:var(--navy);margin-bottom:12px;font-size:18px}
+.empty{background:#f8fafc;border:2px dashed #cbd5e1;padding:35px;text-align:center;border-radius:12px;color:#94a3b8}
+.upload-box{background:#f8fafc;padding:18px;border-radius:12px;margin:14px 0;border:2px dashed #cbd5e1}
+.news-img{max-width:100%;border-radius:10px;margin-top:10px}
+.top-card{display:inline-block;width:calc(50% - 12px);margin:6px;text-align:center;vertical-align:top}
+.top-card img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)}
+.footer{background:#071430;color:#fff;text-align:center;padding:25px;font-size:14px}
+.footer b{color:var(--gold)}
+.loading{text-align:center;padding:30px;color:#64748b}
+.link-btn{display:inline-block;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:bold;margin:6px}
+@media(max-width:600px){.top-card{width:100%;margin:6px 0}}
+</style>
+</head>
+<body>
+<div id="loginPage" class="login-wrap">
+<div class="login-box">
+<img src="https://i.ibb.co/SD12XjKb/file-00000000a8b8824398c2d1d125682b5c.png" alt="شعار المدرسة">
+<h1>مدرسة البتانون الثانوية المطورة</h1>
+<p>المنوفية - إدارة شبين الكوم التعليمية</p>
+<input id="u" dir="ltr" placeholder="البريد الإلكتروني" autocomplete="off">
+<input id="p" type="password" placeholder="كلمة المرور">
+<button class="btn" onclick="login()">تسجيل الدخول</button>
+</div>
+<div style="color:#fff;opacity:.6;margin-top:18px;font-size:13px">Made by <b style="color:#d4a017">Mohamed Khaled</b> © 2026</div>
+</div>
+<div id="dash">
+<div class="header">
+<div class="user"><b id="w"></b><span class="badge" id="rb"></span></div>
+<button class="logout-btn" onclick="logout()">خروج</button>
+</div>
+<div class="hero">
+<img src="https://i.ibb.co/SD12XjKb/file-00000000a8b8824398c2d1d125682b5c.png">
+<h2>مدرسة البتانون الثانوية المطورة</h2>
+<p>البتانون - شبين الكوم - المنوفية</p>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="main" id="c"></div>
+<div class="footer">مدرسة البتانون الثانوية المطورة © 2026<br>Made by <b>Mohamed Khaled</b></div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",authDomain:"school-d50aa.firebaseapp.com",projectId:"school-d50aa",storageBucket:"school-d50aa.firebasestorage.app",messagingSenderId:"14520467716",appId:"1:14520467716:web:a9874d7152ab6e4b255051"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
+const CLOUD_NAME="fkmbapdm";
+const UPLOAD_PRESET="abs8ekdc";
+function esc(s){if(!s)return "";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function safeUrl(u){if(!u)return "";u=String(u).trim();if(u.startsWith("https://res.cloudinary.com/")||u.startsWith("https://"))return u;return "";}
+function getRole(email){if(email==="admin@school.com")return{r:"إدارة",n:"مدير المدرسة"};if(email==="teacher@school.com")return{r:"معلم",n:"أستاذ محمد"};return{r:"طالب",n:"زائر"};}
+let curRole="طالب",curName="زائر";
+window.login=async function(){let e=document.getElementById('u').value.trim(),pw=document.getElementById('p').value;if(!e||!pw)return alert("اكتب الإيميل والباسورد");try{await signInWithEmailAndPassword(auth,e,pw);}catch(er){alert("فشل الدخول: تأكد من البيانات");}};
+onAuthStateChanged(auth,(user)=>{
+if(user){let inf=getRole(user.email);curRole=inf.r;curName=inf.n;
+document.getElementById('loginPage').style.display='none';
+document.getElementById('dash').style.display='flex';
+document.getElementById('w').innerText="أهلاً "+curName;
+document.getElementById('rb').innerText=curRole;
+let t=["الأخبار","الجداول","الملفات","النتائج","الأوائل","تواصل"];
+let tb=document.getElementById('tabs');
+tb.innerHTML=t.map((x,i)=>`<span class="${i==0?'on':''}">${esc(x)}</span>`).join("");
+[...tb.children].forEach((sp,ix)=>sp.onclick=()=>go(t[ix],sp));
+go(t[0],tb.children[0]);
+}else{
+document.getElementById('loginPage').style.display='flex';
+document.getElementById('dash').style.display='none';
+}
+});
+window.logout=async function(){await signOut(auth);};
+function canEdit(){return curRole==="إدارة"||curRole==="معلم";}
+function canDelete(){return curRole==="إدارة";}
+function refresh(n){let a=[...document.querySelectorAll('#tabs span')];let i=a.findIndex(s=>s.textContent==n);if(i>=0)go(n,a[i]);}
+async function uploadToCloudinary(file){
+if(!file.type.startsWith('image/'))throw new Error("ارفع صورة فقط");
+if(file.size>5*1024*1024)throw new Error("الصورة كبيرة، اختار صورة أقل من 5 ميجا");
+const fd=new FormData();fd.append("file",file);fd.append("upload_preset",UPLOAD_PRESET);
+const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:fd});
+const data=await res.json();
+if(!data.secure_url)throw new Error("فشل الرفع: "+(data.error?.message||""));
+return data.secure_url;
+}
+window.go=async function(n,el){
+try{
+if(el){[...document.querySelectorAll('#tabs span')].forEach(s=>s.classList.remove('on'));el.classList.add('on');}
+let c=document.getElementById('c');
+if(n=="الأخبار"){
+c.innerHTML=(canEdit()?`<div class="card"><h3>📰 نشر خبر جديد</h3><input id="nt" placeholder="عنوان الخبر"><textarea id="nd" rows="3" placeholder="تفاصيل الخبر..."></textarea><input type="file" id="nf" accept="image/*"><button class="btn" onclick="publishNews(this)">نشر الخبر</button></div>`:"")+`<div id="nl"><div class="loading">جاري التحميل...</div></div>`;
+let s=await getDocs(query(collection(db,"news"),orderBy("createdAt","desc")));
+document.getElementById('nl').innerHTML=s.empty?`<div class="empty">لا توجد أخبار بعد</div>`:s.docs.map(d=>{let x=d.data();let u=safeUrl(x.image);return `<div class="card"><b style="font-size:17px;color:#0a1f44">${esc(x.title)}</b><p style="margin:8px 0;color:#475569">${esc(x.details)}</p>${u?`<img src="${u}" class="news-img" loading="lazy">`:""}<div style="margin-top:10px"><small style="color:#94a3b8">بواسطة: ${esc(x.by)}</small>${canDelete()?`<br><button class="btn-del" onclick="delAny('news','${d.id}','الأخبار')">حذف</button>`:""}</div></div>`}).join("");
+return;}
+if(n=="الجداول"){
+c.innerHTML=`<div class="card"><h3>📅 الجداول الدراسية</h3>${canEdit()?`<div class="upload-box"><input id="tT" placeholder="عنوان الجدول (مثال: جدول الصف الأول)"><input type="file" id="tF" accept="image/*"><button class="btn" onclick="upTable(this)">رفع الجدول</button></div>`:""}<div id="tL"><div class="loading">جاري التحميل...</div></div></div>`;
+let s=await getDocs(query(collection(db,"tables"),orderBy("createdAt","desc")));
+document.getElementById('tL').innerHTML=s.empty?`<div class="empty">لا توجد جداول بعد</div>`:s.docs.map(d=>{let x=d.data();let u=safeUrl(x.url);return `<div class="card" style="background:#f8fafc"><b>${esc(x.title)}</b><br>${u?`<img src="${u}" style="max-width:100%;border-radius:10px;margin-top:10px" loading="lazy">`:""}${canDelete()?`<br><button class="btn-del" onclick="delAny('tables','${d.id}','الجداول')">حذف</button>`:""}</div>`}).join("");
+return;}
+if(n=="الملفات"){
+c.innerHTML=`<div class="card"><h3>📁 الكتب والملفات</h3>${canEdit()?`<div class="upload-box"><input id="bT" placeholder="اسم الكتاب أو الملف"><input id="bL" dir="ltr" placeholder="رابط Google Drive https://..."><button class="btn btn-navy" onclick="addBookLink(this)">حفظ الرابط</button></div>`:""}<div id="fL"><div class="loading">جاري التحميل...</div></div></div>`;
+let s=await getDocs(query(collection(db,"files"),orderBy("createdAt","desc")));
+document.getElementById('fL').innerHTML=s.empty?`<div class="empty">لا توجد ملفات بعد</div>`:s.docs.map(d=>{let x=d.data();return `<div class="card" style="background:#f8fafc"><b>${esc(x.title)}</b><br><a href="${esc(x.url)}" target="_blank" style="background:#0a1f44;color:#fff;padding:10px 22px;border-radius:8px;display:inline-block;margin-top:10px;text-decoration:none">📖 فتح الملف</a>${canDelete()?`<br><button class="btn-del" onclick="delAny('files','${d.id}','الملفات')">حذف</button>`:""}</div>`}).join("");
+return;}
+if(n=="النتائج"){
+if(curRole==="إدارة"){
+c.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:2px solid #0a1f44"><h3>🎓 إدارة النتائج</h3><p style="color:#475569;margin-bottom:12px">ارفع نتائج Excel من الصفحة المخصصة:</p><a href="upload.html" class="link-btn" style="background:#0a1f44;color:#fff;font-size:18px;padding:14px 40px">📤 افتح صفحة رفع النتائج</a></div><div class="card"><h3>🎓 إدارة النتائج اليدوية (موجودة زي ما هي)</h3><input id="rn" placeholder="رقم الجلوس"><input id="rname" placeholder="اسم الطالب"><input id="rt" placeholder="المجموع / التقدير"><button class="btn" onclick="pubRes(this)">حفظ النتيجة</button><div id="rl" style="margin-top:15px"></div></div>`;
+let s=await getDocs(collection(db,"results"));
+document.getElementById('rl').innerHTML=s.empty?"<div class='empty'>لا توجد نتائج</div>":s.docs.map(d=>{let r={id:d.id,...d.data()};return `<div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:12px;border-radius:10px;margin:6px 0"><span><b>${esc(r.name)}</b> - ${esc(r.seat)} - ${esc(r.total)}</span><button class="btn-del" style="margin:0" onclick="delAny('results','${r.id}','النتائج')">حذف</button></div>`}).join("");
+} else {
+c.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #22c55e"><h3>🎓 النتائج</h3><p style="color:#475569;margin-bottom:12px">لعرض نتيجتك بالتفصيل والدرجات:</p><a href="view-result.html" class="link-btn" style="background:#16a34a;color:#fff;font-size:18px;padding:14px 40px">👁️ افتح صفحة النتيجة</a></div><div class="card" style="text-align:center;max-width:500px;margin:0 auto"><h3>🎓 استعلام سريع (موجود زي ما هو)</h3><input id="seat" placeholder="ادخل رقم الجلوس" style="max-width:300px;margin:10px auto;text-align:center"><button class="btn" style="max-width:300px" onclick="getRes(this)">عرض النتيجة</button><div id="rr" style="margin-top:15px"></div></div>`;
+}
+return;}
+if(n=="النتيجة"){
+c.innerHTML=`<div class="card" style="text-align:center;max-width:500px;margin:0 auto"><h3>🎓 استعلم عن نتيجتك</h3><input id="seat" placeholder="ادخل رقم الجلوس" style="max-width:300px;margin:10px auto;text-align:center"><button class="btn" style="max-width:300px" onclick="getRes(this)">عرض النتيجة</button><div id="rr" style="margin-top:15px"></div></div>`;
+return;}
+if(n=="الأوائل"){
+c.innerHTML=`<div class="card"><h3>🏆 لوحة الأوائل</h3>${canEdit()?`<div class="upload-box"><input id="oN" placeholder="اسم الطالب"><input id="oT" placeholder="المجموع"><input type="file" id="oF" accept="image/*"><button class="btn" onclick="upTop(this)">إضافة للأوائل</button></div>`:""}<div id="oL"><div class="loading">جاري التحميل...</div></div></div>`;
+let s=await getDocs(collection(db,"tops"));
+document.getElementById('oL').innerHTML=s.empty?`<div class="empty">لا يوجد أوائل بعد</div>`:s.docs.map(d=>{let x=d.data();let u=safeUrl(x.url);return `<div class="card top-card">${u?`<img src="${u}" loading="lazy">`:"<div style='font-size:50px'>🎓</div>"}<br><b>${esc(x.name)}</b><br><span style="color:#d4a017;font-weight:bold">${esc(x.total)}</span>${canDelete()?`<br><button class="btn-del" onclick="delAny('tops','${d.id}','الأوائل')">حذف</button>`:""}</div>`}).join("");
+return;}
+if(n=="تواصل"){
+c.innerHTML=`<div class="card" style="text-align:center"><h3>📞 تواصل معنا</h3><p style="margin:10px 0"><b>مدرسة البتانون الثانوية المطورة</b></p><p>البتانون - شبين الكوم - المنوفية</p><p style="margin-top:10px;color:#64748b">إدارة شبين الكوم التعليمية</p></div>`;
+return;}
+}catch(e){document.getElementById('c').innerHTML=`<div class="empty">خطأ: ${esc(e.message)}</div>`;}
+};
+window.publishNews=async function(btn){
+try{
+let t=document.getElementById('nt').value.trim();
+if(!t)return alert("اكتب عنوان الخبر");
+btn.disabled=true;btn.innerText="جاري النشر...";
+let imgUrl="";
+let f=document.getElementById('nf').files[0];
+if(f){imgUrl=await uploadToCloudinary(f);}
+await addDoc(collection(db,"news"),{title:t,details:document.getElementById('nd').value,by:curName,image:imgUrl,createdAt:Date.now()});
+alert("تم النشر ✅");refresh('الأخبار');
+}catch(e){alert(e.message);btn.disabled=false;btn.innerText="نشر الخبر";}
+};
+window.delAny=async function(a,b,c2){if(!confirm("متأكد من الحذف؟"))return;try{await deleteDoc(doc(db,a,b));refresh(c2);}catch(e){alert(e.message)}};
+window.pubRes=async function(btn){
+try{
+let seat=document.getElementById('rn').value.trim(),name=document.getElementById('rname').value.trim(),total=document.getElementById('rt').value.trim();
+if(!seat||!name)return alert("كمل البيانات");
+btn.disabled=true;
+await addDoc(collection(db,"results"),{seat,name,total});
+alert("تم الحفظ ✅");refresh('النتائج');
+}catch(e){alert(e.message);btn.disabled=false;}};
+window.getRes=async function(btn){
+try{
+let s=document.getElementById('seat').value.trim();
+if(!s)return alert("اكتب رقم الجلوس");
+document.getElementById('rr').innerHTML="<div class='loading'>جاري البحث...</div>";
+let q=await getDocs(collection(db,"results"));
+let f=null;q.forEach(d=>{if(String(d.data().seat)===s)f=d.data()});
+document.getElementById('rr').innerHTML=f?`<div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:12px;padding:20px;margin-top:10px"><h4 style="color:#15803d">${esc(f.name)}</h4><p style="font-size:22px;font-weight:bold;margin-top:8px">${esc(f.total)}</p></div>`:`<div class="empty">رقم الجلوس غير موجود</div>`;
+}catch(e){alert(e.message)}};
+window.upTable=async function(btn){
+try{
+let f=document.getElementById('tF').files[0],ti=document.getElementById('tT').value.trim();
+if(!ti||!f)return alert("اكتب العنوان واختار الصورة");
+btn.disabled=true;btn.innerText="جاري الرفع...";
+let url=await uploadToCloudinary(f);
+await addDoc(collection(db,"tables"),{title:ti,url,createdAt:Date.now()});
+alert("تم الرفع ✅");refresh('الجداول');
+}catch(e){alert(e.message);btn.disabled=false;btn.innerText="رفع الجدول";}};
+window.addBookLink=async function(btn){
+try{
+let t=document.getElementById('bT').value.trim(),l=document.getElementById('bL').value.trim();
+if(!t||!l)return alert("كمل البيانات");
+if(!l.startsWith("https://"))return alert("الرابط لازم يبدأ بـ https://");
+btn.disabled=true;
+await addDoc(collection(db,"files"),{title:t,url:l,createdAt:Date.now()});
+alert("تم الحفظ ✅");refresh('الملفات');
+}catch(e){alert(e.message);btn.disabled=false;}};
+window.upTop=async function(btn){
+try{
+let f=document.getElementById('oF').files[0],nm=document.getElementById('oN').value.trim();
+if(!nm||!f)return alert("اكتب الاسم واختار الصورة");
+btn.disabled=true;btn.innerText="جاري الرفع...";
+let url=await uploadToCloudinary(f);
+await addDoc(collection(db,"tops"),{name:nm,total:document.getElementById('oT').value,url,createdAt:Date.now()});
+alert("تم ✅");refresh('الأوائل');
+}catch(e){alert(e.message);btn.disabled=false;btn.innerText="إضافة للأوائل";}};
+</script>
+</body>
+</html>
