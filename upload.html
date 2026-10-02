@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>رفع نتائج البتانون</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+body{font-family:Tahoma,Arial;background:#0a1f44;color:#fff;padding:20px;text-align:center;margin:0}
+.box{background:#fff;color:#222;max-width:520px;margin:20px auto;padding:22px;border-radius:12px}
+button{background:#d4a017;border:none;padding:13px;width:100%;border-radius:8px;font-weight:bold;cursor:pointer;font-size:16px}
+input{width:100%;margin:12px 0}
+#s{margin-top:12px;font-weight:bold;color:#0a1f44}
+</style>
+</head>
+<body>
+<h3>رفع كشف الدرجات - مدرسة البتانون</h3>
+<div class="box">
+<div style="font-size:13px;color:#64748b">العناوين المطلوبة: رقم الجلوس | الاسم | عربي | علوم متكامله | رياضيات | انجليزي | تاريخ | برمجه | حاسب آلي | فلسفه ومنطق | المجموع</div>
+<input type="file" id="f" accept=".xlsx,.xls,.csv">
+<button onclick="up()">رفع الكشف</button>
+<div id="s"></div>
+</div>
+<script>
+firebase.initializeApp({
+apiKey:"AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",
+authDomain:"school-d50aa.firebaseapp.com",
+projectId:"school-d50aa",
+storageBucket:"school-d50aa.firebasestorage.app",
+messagingSenderId:"14520467716",
+appId:"1:14520467716:web:a9874d7152ab6e4b255051"
+});
+const db = firebase.firestore();
+const SUBS = ["عربي","علوم متكامله","رياضيات","انجليزي","تاريخ","برمجه","حاسب آلي","فلسفه ومنطق","المجموع"];
+async function up(){
+const file = document.getElementById('f').files[0];
+if(!file){ alert("اختار ملف الاكسيل الأول"); return; }
+document.getElementById('s').innerText = "جاري قراءة الملف...";
+try{
+const buf = await file.arrayBuffer();
+const wb = XLSX.read(buf);
+const ws = wb.Sheets[wb.SheetNames[0]];
+const rows = XLSX.utils.sheet_to_json(ws);
+let c = 0;
+for(const r of rows){
+const seat = String(r["رقم الجلوس"] || "").trim();
+const name = String(r["الاسم"] || "").trim();
+if(!seat ||!name) continue;
+const subjects = {};
+SUBS.forEach(k => { if(r[k]!== undefined && r[k]!== "") subjects[k] = String(r[k]); });
+await db.collection("results").add({
+seat: seat,
+name: name,
+subjects: subjects,
+total: subjects["المجموع"] || "",
+createdAt: Date.now()
+});
+c++;
+document.getElementById('s').innerText = "تم رفع " + c + " طالب...";
+}
+document.getElementById('s').innerText = "تم بنجاح: " + c + " طالب";
+alert("خلص ✅ رفعنا " + c + " طالب");
+}catch(e){ alert("خطأ: " + e.message); }
+}
+</script>
+</body>
+</html>
