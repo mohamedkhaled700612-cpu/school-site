@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رفع النتائج | مدرسة البتانون</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{margin:0;min-height:100vh;background:linear-gradient(135deg,#1a3a5f,#2c5f8a);display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;width:100%;max-width:480px;border-radius:20px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+.logo{font-size:48px;margin-bottom:10px}
+h2{color:#1a3a5f;margin:0 0 8px}
+.sub{color:#666;font-size:14px;margin-bottom:24px}
+input[type=email],input[type=password]{width:100%;padding:14px;border:2px solid #e0e0e0;border-radius:12px;font-size:16px;margin-bottom:12px;outline:none;transition:.2s}
+input:focus{border-color:#2c5f8a}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#1a3a5f,#2c5f8a);color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:bold;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(26,58,95,.3)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.file-box{border:2px dashed #2c5f8a;border-radius:12px;padding:30px 20px;margin:20px 0;cursor:pointer;transition:.2s;background:#f8fbff}
+.file-box:hover{background:#eef4fb}
+.file-box span{font-size:16px;color:#2c5f8a;font-weight:bold}
+#fileName{margin-top:10px;font-size:13px;color:#666}
+.progress{height:10px;background:#e0e0e0;border-radius:10px;overflow:hidden;margin:15px 0;display:none}
+.progress div{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);width:0%;transition:width.3s}
+#status{font-size:14px;color:#333;min-height:20px;margin-top:10px}
+.success{color:#27ae60!important;font-weight:bold}
+.tips{background:#fff8e1;border-radius:10px;padding:12px;font-size:13px;color:#795548;text-align:right;margin-top:20px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="card">
+<div id="loginDiv">
+<div class="logo">🔐</div>
+<h2>لوحة الإدارة</h2>
+<p class="sub">مدرسة الشهيد أحمد عبد الرحيم - البتانون</p>
+<input type="email" id="email" value="admin@batanoun.com" placeholder="البريد الإلكتروني">
+<input type="password" id="password" placeholder="كلمة السر">
+<button class="btn" onclick="login()">دخول</button>
+</div>
+
+<div id="uploadDiv" style="display:none">
+<div class="logo">📊</div>
+<h2>رفع نتائج أولى ثانوي</h2>
+<p class="sub">ارفع ملف Excel بصيغة.xlsx</p>
+
+<label for="file" class="file-box" style="display:block">
+<span>📁 اضغط لاختيار ملف Excel</span>
+<div id="fileName">لم يتم اختيار ملف بعد</div>
+</label>
+<input type="file" id="file" accept=".xlsx,.xls" style="display:none" onchange="document.getElementById('fileName').innerText=this.files[0]?this.files[0].name:'لم يتم اختيار ملف بعد'">
+
+<div class="progress" id="progWrap"><div id="prog"></div></div>
+
+<button class="btn" id="upBtn" onclick="upload()">🚀 رفع الملف</button>
+<p id="status"></p>
+
+<div class="tips">
+💡 <b>شكل ملف Excel المطلوب:</b><br>
+• عمود <b>الصف</b> (مثال: الأول الثانوي)<br>
+• عمود <b>رقم الجلوس</b><br>
+• عمود <b>الاسم</b><br>
+• أعمدة المواد: اللغة العربية، اللغة الإنجليزية، الرياضيات، العلوم المتكاملة، التاريخ، الفلسفة والمنطق...
+</div>
+</div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",
+  authDomain: "school-d50aa.firebaseapp.com",
+  projectId: "school-d50aa",
+  storageBucket: "school-d50aa.firebasestorage.app",
+  messagingSenderId: "14520467716",
+  appId: "1:14520467716:web:a9874d7152ab6e4b255051"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(); const db=firebase.firestore();
+
+function login(){
+  const e=document.getElementById('email').value;
+  const p=document.getElementById('password').value;
+  auth.signInWithEmailAndPassword(e,p)
+ .then(()=>{document.getElementById('loginDiv').style.display='none';document.getElementById('uploadDiv').style.display='block';})
+ .catch(err=>alert('خطأ: '+err.message));
+}
+
+async function upload(){
+  const file=document.getElementById('file').files[0];
+  if(!file){alert('اختار ملف Excel الأول');return;}
+  const btn=document.getElementById('upBtn');
+  const progWrap=document.getElementById('progWrap');
+  const prog=document.getElementById('prog');
+  const status=document.getElementById('status');
+  btn.disabled=true; progWrap.style.display='block';
+
+  try{
+    const data=await file.arrayBuffer();
+    const wb=XLSX.read(data);
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    const اساسي=['اللغة العربية','اللغة الإنجليزية','الرياضيات','العلوم المتكاملة','التاريخ','الفلسفة والمنطق'];
+    let count=0;
+    for(const r of rows){
+      const الصف=String(r['الصف']||'').trim();
+      const رقم=String(r['رقم الجلوس']||'').trim();
+      if(!الصف||!رقم) continue;
+      const id=الصف+'_'+رقم;
+      let المجموع=0;
+      اساسي.forEach(m=>{ المجموع+=Number(r[m]||0); });
+      await db.collection('results').doc(id).set({
+        grade: الصف, seat_number: رقم, name: r['الاسم']||'',
+        subjects: {
+          'اللغة العربية': Number(r['اللغة العربية']||0),
+          'اللغة الإنجليزية': Number(r['اللغة الإنجليزية']||0),
+          'الرياضيات': Number(r['الرياضيات']||0),
+          'العلوم المتكاملة': Number(r['العلوم المتكاملة']||0),
+          'التاريخ': Number(r['التاريخ']||0),
+          'الفلسفة والمنطق': Number(r['الفلسفة والمنطق']||0),
+          'اللغة الأجنبية الثانية': Number(r['اللغة الأجنبية الثانية']||0),
+          'التربية الدينية': Number(r['التربية الدينية']||0),
+          'البرمجة وعلوم الحاسب': Number(r['البرمجة وعلوم الحاسب']||0)
+        },
+        total: المجموع, createdAt: new Date()
+      });
+      count++;
+      prog.style.width=(count/rows.length*100)+'%';
+      status.innerText='جاري الرفع... '+count+' / '+rows.length;
+    }
+    status.innerHTML='<span class="success">✅ تم رفع '+count+' طالب بنجاح!</span>';
+  }catch(e){ status.innerText='❌ خطأ: '+e.message; }
+  btn.disabled=false;
+}
+</script>
+</body>
+</html>
