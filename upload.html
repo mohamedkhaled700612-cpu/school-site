@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>رفع النتائج - مدرسة البتانون الثانوية المطورة</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Arial;margin:0;padding:0}
+:root{--navy:#0a1f44;--navy2:#132f63;--gold:#d4a017;--gold2:#f5c542;--bg:#eef2f7}
+html{scroll-behavior:smooth}
+body{background:var(--bg);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--navy)}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#0a1f44}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold),#8a6808);border-radius:99px}
+.header{background:linear-gradient(135deg,rgba(19,47,99,.55),rgba(10,31,68,.65));backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.25);border-bottom:1px solid rgba(255,255,255,.18);position:sticky;top:0;z-index:30}
+.header .user{display:flex;align-items:center;gap:12px}
+.badge{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy);padding:5px 14px;border-radius:20px;font-size:13px;font-weight:bold;box-shadow:0 4px 12px rgba(212,160,23,.4),inset 0 1px 0 rgba(255,255,255,.7)}
+.hbtn{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:bold;font-size:14px;text-decoration:none;transition:.2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.hbtn:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}
+.hero{position:relative;color:#fff;text-align:center;padding:56px 20px 66px;overflow:hidden;background:radial-gradient(700px 300px at 85% 0%,rgba(212,160,23,.4),transparent 60%),radial-gradient(600px 300px at 10% 100%,rgba(59,130,246,.35),transparent 60%),linear-gradient(135deg,#071430,var(--navy) 55%,#1e3a6e)}
+.hero:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.13) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(to bottom,black,transparent)}
+.hero:after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:56px;background:var(--bg);clip-path:ellipse(60% 100% at 50% 100%)}
+.hero img{position:relative;width:92px;height:92px;border-radius:50%;border:3px solid var(--gold);object-fit:cover;margin-bottom:12px;box-shadow:0 0 0 10px rgba(212,160,23,.15),0 18px 40px rgba(0,0,0,.4);animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero h2{position:relative;font-size:clamp(22px,4vw,32px);margin-bottom:6px;background:linear-gradient(90deg,#fff,#ffe9a8,#fff);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.hero p{position:relative;opacity:.85;font-size:14px}
+.main{flex:1;max-width:680px;width:100%;margin:0 auto;padding:26px 15px}
+.card{background:#fff;padding:26px;border-radius:20px;margin-bottom:18px;box-shadow:0 4px 18px rgba(10,31,68,.07);border:1px solid #e8edf4;animation:fadeUp .45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.card h3{color:var(--navy);margin-bottom:14px;font-size:19px;display:flex;align-items:center;gap:8px}
+.card h3:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent);border-radius:99px}
+label{display:block;font-size:13px;font-weight:bold;color:#475569;margin:10px 0 4px}
+select,input[type=file]{width:100%;padding:13px;margin:6px 0;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;outline:none;transition:.25s;background:#fff}
+select:focus,input[type=file]:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,160,23,.18)}
+.btn{padding:13px;border-radius:12px;border:none;font-weight:bold;cursor:pointer;width:100%;margin-top:10px;font-size:16px;transition:.25s;position:relative;overflow:hidden}
+.btn:after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:.5s}
+.btn:hover{transform:translateY(-2px)}
+.btn:hover:after{left:130%}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.55;cursor:wait;transform:none}
+.btn-navy{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff;box-shadow:0 8px 20px rgba(10,31,68,.35)}
+.btn-green{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;box-shadow:0 8px 20px rgba(21,128,61,.35)}
+.btn-red{background:linear-gradient(135deg,#f87171,#dc2626);color:#fff;box-shadow:0 8px 20px rgba(220,38,38,.3)}
+#msg{margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(135deg,#f8fafc,#eef2f7);border:1px solid #e2e8f0;min-height:48px;font-size:14px;line-height:1.8;color:#334155;word-break:break-word}
+.pwrap{margin-top:14px;display:none}
+.pwrap.show{display:block;animation:fadeUp .3s ease both}
+.plabel{display:flex;justify-content:space-between;font-size:13px;font-weight:bold;color:#475569;margin-bottom:7px}
+.plabel b{color:var(--navy)}
+.pbar{height:14px;background:#e2e8f0;border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(10,31,68,.12)}
+.pfill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--gold2));background-size:200% 100%;box-shadow:0 0 12px rgba(212,160,23,.55);transition:width .35s ease;animation:shine 1.4s linear infinite}
+.pfill.del{background:linear-gradient(90deg,#f87171,#dc2626,#f87171);background-size:200% 100%;box-shadow:0 0 12px rgba(220,38,38,.5)}
+.tip{background:linear-gradient(135deg,rgba(255,255,255,.65),rgba(255,255,255,.4));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(212,160,23,.35);border-radius:16px;padding:16px 18px;font-size:13px;line-height:1.9;color:#475569;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.tip b{color:var(--navy)}
+.footer{background:linear-gradient(180deg,#0a1f44,#071430);color:#fff;text-align:center;padding:26px;font-size:14px;border-top:3px solid var(--gold)}
+.footer b{color:var(--gold)}
+body.dark{--bg:#0b1220}
+body.dark .card{background:#1e293b;color:#e2e8f0}
+body.dark .card h3{color:#f1f5f9}
+body.dark select,body.dark input[type=file]{background:#0f172a;color:#fff;border-color:#334155}
+body.dark #msg{background:#0f172a;border-color:#334155;color:#cbd5e1}
+body.dark .tip{background:rgba(30,41,59,.6);color:#cbd5e1}
+body.dark .tip b{color:#f1f5f9}
+body.dark .hero:after{background:#0b1220}
+body.dark label,.plabel{color:#94a3b8}
+body.dark .plabel b{color:#f1f5f9}
+body.dark .pbar{background:#334155}
+@media (prefers-reduced-transparency: reduce){
+.header{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(10,31,68,.97)}
+}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="user"><b>رفع النتائج</b><span class="badge">إدارة</span></div>
+<div style="display:flex;gap:8px"><button class="hbtn" onclick="document.body.classList.toggle('dark')">🌙</button><a class="hbtn" href="index.html">الرئيسية</a></div>
+</div>
+<div class="hero">
+<img src="https://i.ibb.co/SD12XjKb/file-00000000a8b8824398c2d1d125682b5c.png">
+<h2>📤 رفع النتائج من Excel</h2>
+<p>مدرسة البتانون الثانوية المطورة</p>
+</div>
+<div class="main">
+<div class="card">
+<h3>📤 بيانات الرفع</h3>
+<label>الصف الدراسي</label>
+<select id="grade"><option value="1">الصف الأول الثانوي</option><option value="2">الصف الثاني الثانوي</option><option value="3">الصف الثالث الثانوي</option></select>
+<label>ملف Excel</label>
+<input type="file" id="file" accept=".xlsx,.xls,.csv">
+<button id="previewBtn" class="btn btn-navy">👁️ معاينة الملف</button>
+<button id="uploadBtn" class="btn btn-green" disabled>✅ تأكيد الرفع</button>
+<button id="delBtn" class="btn btn-red">🗑️ مسح كل نتائج هذا الصف</button>
+<div class="pwrap" id="pwrap"><div class="plabel"><span id="ptext">جاري التحضير...</span><b id="ppct">0%</b></div><div class="pbar"><div class="pfill" id="pfill"></div></div></div>
+<div id="msg">اختر الصف والملف</div>
+</div>
+<div class="tip">💡 <b>قبل الرفع:</b> اتأكد إن الملف فيه عمود <b>رقم الجلوس</b> وعمود <b>الاسم</b>، وباقي الأعمدة هتتاخد كمواد تلقائيًا. الرفع بيمسح نتائج الصف القديمة الأول وبعدين يرفع الجديد على دفعات.</div>
+</div>
+<div class="footer">مدرسة البتانون الثانوية المطورة © 2026<br>Made by <b>Mohamed Khaled</b></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",authDomain:"school-d50aa.firebaseapp.com",projectId:"school-d50aa",storageBucket:"school-d50aa.firebasestorage.app",messagingSenderId:"14520467716",appId:"1:14520467716:web:a9874d7152ab6e4b255051"};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const ADMIN_EMAILS=["admin@school.com"];
+const sel=document.getElementById('grade'), fileInp=document.getElementById('file'), msg=document.getElementById('msg'), previewBtn=document.getElementById('previewBtn'), uploadBtn=document.getElementById('uploadBtn'), delBtn=document.getElementById('delBtn');
+const pwrap=document.getElementById('pwrap'), pfill=document.getElementById('pfill'), ptext=document.getElementById('ptext'), ppct=document.getElementById('ppct');
+let rows=[];
+function setMsg(t){msg.innerHTML=t;}
+function prog(pct,text,delMode){pwrap.classList.add('show');pfill.classList.toggle('del',!!delMode);let p=Math.max(0,Math.min(100,Math.round(pct)));pfill.style.width=p+"%";ppct.textContent=p+"%";if(text)ptext.textContent=text;}
+function progDone(text){prog(100,text);setTimeout(()=>pwrap.classList.remove('show'),1800);}
+function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function normalizeSeat(s){return String(s??"").trim().replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));}
+function isSeatCol(h){return /جلوس|seat/i.test(h);}
+function isNameCol(h){return /اسم|name/i.test(h);}
+onAuthStateChanged(auth,u=>{if(!u||!ADMIN_EMAILS.includes(u.email)){location.href="index.html";}});
+previewBtn.onclick=()=>{
+let f=fileInp.files[0]; if(!f) return setMsg("اختر ملف الأول");
+let reader=new FileReader();
+reader.onload=e=>{
+let wb=XLSX.read(e.target.result,{type:'binary'});
+let ws=wb.Sheets[wb.SheetNames[0]];
+let data=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+let hi=data.findIndex(r=>{let t=r.map(c=>String(c).trim());return t.some(isSeatCol)&&t.some(isNameCol);});
+if(hi<0){
+let found=(data[0]||[]).map(c=>String(c).trim()).filter(c=>c).join("، ");
+return setMsg("❌ مش لاقي عمود (رقم الجلوس) وعمود (الاسم). الأعمدة اللي لقيتها في أول صف: "+esc(found||"لا يوجد"));
+}
+let headers=data[hi].map(h=>String(h).trim());
+let si=headers.findIndex(isSeatCol);
+let ni=headers.findIndex(isNameCol);
+rows=data.slice(hi+1).filter(r=>String(r[si]??"").trim()!==""&&String(r[ni]??"").trim()!=="").map(r=>{
+let o={seat:normalizeSeat(r[si]),name:String(r[ni]).trim(),subjects:{},total:""};
+headers.forEach((h,i)=>{if(i!==si&&i!==ni&&h!==""){if(h.includes("المجموع")&&!o.total)o.total=String(r[i]);o.subjects[h]=String(r[i]);}});
+return o;});
+if(!rows.length) return setMsg("❌ لقيت العناوين بس مفيش بيانات طلبة تحتها");
+uploadBtn.disabled=false;
+setMsg("✅ جاهز: "+rows.length+" طالب | الأعمدة: "+esc(headers.filter(h=>h).join("، ")));
+};
+reader.readAsBinaryString(f);
+};
+uploadBtn.onclick=async()=>{
+if(!rows.length) return;
+let grade=sel.value, gradeName=sel.selectedOptions[0].text;
+if(!confirm("هتمسح نتائج "+gradeName+" القديمة وترفع "+rows.length+" نتيجة جديدة. متأكد؟")) return;
+uploadBtn.disabled=true; previewBtn.disabled=true; delBtn.disabled=true;
+try{
+setMsg("جاري مسح القديم...");
+let old=await getDocs(query(collection(db,"results"),where("grade","==",grade)));
+let totalDel=old.size, doneDel=0;
+if(totalDel===0) prog(8,"لا توجد نتائج قديمة للمسح",true);
+for(let d of old.docs){ await deleteDoc(doc(db,"results",d.id)); doneDel++; prog(doneDel/totalDel*30,"جاري مسح القديم: "+doneDel+" من "+totalDel,true); }
+setMsg("جاري رفع "+rows.length+" نتيجة...");
+let n=0;
+for(let i=0;i<rows.length;i+=400){
+let batch=rows.slice(i,i+400);
+await Promise.all(batch.map(r=>addDoc(collection(db,"results"),{seat:r.seat,name:r.name,total:r.total,subjects:r.subjects,grade:grade,createdAt:new Date().toISOString()})));
+n+=batch.length; prog(30+(n/rows.length*70),"جاري الرفع: "+n+" من "+rows.length); setMsg("تم رفع "+n+" من "+rows.length+"...");
+}
+progDone("اكتمل الرفع بنجاح 🎉");
+setMsg("✅ خلص! اترفع "+rows.length+" نتيجة لـ "+esc(gradeName));
+rows=[]; fileInp.value="";
+}catch(e){pwrap.classList.remove('show');setMsg("❌ خطأ: "+esc(e.message));}
+uploadBtn.disabled=false; previewBtn.disabled=false; delBtn.disabled=false;
+};
+delBtn.onclick=async()=>{
+let grade=sel.value, gradeName=sel.selectedOptions[0].text;
+if(!confirm("⚠️ متأكد؟ هتمسح كل نتائج "+gradeName+" نهائيا ومش هترجع")) return;
+delBtn.disabled=true; uploadBtn.disabled=true; previewBtn.disabled=true; setMsg("جاري المسح...");
+try{
+let qs=await getDocs(query(collection(db,"results"),where("grade","==",grade)));
+let tot=qs.size, dn=0;
+if(tot===0) prog(100,"لا توجد نتائج لمسحها",true);
+for(let d of qs.docs){ await deleteDoc(doc(db,"results",d.id)); dn++; prog(dn/tot*100,"جاري المسح: "+dn+" من "+tot,true); }
+progDone("اكتمل المسح");
+setMsg("✅ اتمسح "+qs.size+" نتيجة من "+esc(gradeName));
+}catch(e){pwrap.classList.remove('show');setMsg("❌ خطأ: "+esc(e.message));}
+delBtn.disabled=false; uploadBtn.disabled=false; previewBtn.disabled=false;
+};
+</script>
+</body>
+</html>
