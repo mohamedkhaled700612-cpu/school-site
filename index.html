@@ -340,7 +340,7 @@ return data.secure_url;
 async function notifyAll(title,body,type){
 try{await addDoc(collection(db,"notifications"),{title,body,type:type||"general",createdAt:Date.now(),by:curName});}catch(e){}
 try{
-await fetch("https://mohamedkhaled700612.workers.dev",{
+await fetch(fetch('https://school-notify.mohamedkhaled700612.workers.dev/', {
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
