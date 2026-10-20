@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نتيجة مدرسة البتانون الثانوية المطورة</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,Arial;margin:0;padding:0}
+:root{--navy:#0a1f44;--navy2:#132f63;--gold:#d4a017;--gold2:#f5c542}
+body{min-height:100vh;text-align:center;padding:24px 16px;position:relative;overflow-x:hidden;color:#fff;background:radial-gradient(1000px 500px at 80% -10%,rgba(212,160,23,.35),transparent 60%),radial-gradient(800px 500px at 10% 110%,rgba(59,130,246,.35),transparent 60%),linear-gradient(135deg,#071430,#0a1f44 55%,#1e3a6e)}
+body:before{content:"";position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1px);background-size:26px 26px;mask-image:linear-gradient(to bottom,black,transparent 85%);pointer-events:none}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;animation:float 9s ease-in-out infinite;pointer-events:none}
+.blob.b1{width:340px;height:340px;background:#d4a017;top:-80px;inset-inline-start:-60px}
+.blob.b2{width:300px;height:300px;background:#2563eb;bottom:-90px;inset-inline-end:-40px;animation-delay:-4s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-26px) scale(1.06)}}
+.wrap{position:relative;max-width:480px;margin:0 auto;animation:rise .7s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes rise{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}
+.logo{width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 0 0 10px rgba(212,160,23,.15),0 18px 40px rgba(0,0,0,.4);animation:float 6s ease-in-out infinite}
+h2{font-size:clamp(22px,5vw,30px);margin:14px 0 4px;background:linear-gradient(90deg,#fff,#ffe9a8,#fff);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.sub{opacity:.85;font-size:14px;margin-bottom:20px}
+.card{background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(255,255,255,.25));backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);padding:26px 22px;border-radius:24px;text-align:right;box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 1px rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.65)}
+input,select{width:100%;padding:13px;margin:8px 0;border:2px solid rgba(255,255,255,.7);border-radius:12px;font-size:16px;outline:none;transition:.25s;background:rgba(255,255,255,.9);text-align:center;color:#0a1f44}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,160,23,.18);transform:translateY(-1px)}
+button{padding:13px;border-radius:12px;border:none;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy);width:100%;margin-top:10px;font-size:16px;transition:.25s;box-shadow:0 8px 20px rgba(212,160,23,.35);position:relative;overflow:hidden}
+button:after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:.5s}
+button:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(212,160,23,.45)}
+button:hover:after{left:130%}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.6;cursor:wait;transform:none}
+#pb{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff;box-shadow:0 8px 20px rgba(10,31,68,.35)}
+#r{margin-top:16px;color:#1e293b}
+#r h3{color:var(--navy)!important}
+.row{display:flex;justify-content:space-between;padding:11px 8px;border-bottom:1px solid rgba(10,31,68,.08);background:rgba(255,255,255,.55);border-radius:8px;margin:4px 0}
+.sec{margin:14px 0 8px;font-weight:bold;color:var(--navy);background:linear-gradient(135deg,#fef9c3,#fde68a);padding:9px;border-radius:10px;text-align:center;border:1px solid rgba(212,160,23,.4)}
+.msg{background:rgba(255,255,255,.7);padding:14px;border-radius:12px;text-align:center;color:#475569;font-size:14px}
+.footer{position:relative;margin-top:24px;color:rgba(255,255,255,.65);font-size:13px}
+.footer b{color:var(--gold)}
+@media print{body{background:#fff;padding:0}body:before,.blob,.logo,h2,.sub,button,input,select,.footer{display:none}.card{background:#fff;box-shadow:none;border:none;backdrop-filter:none;max-width:100%}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+<img class="logo" src="https://i.ibb.co/SD12XjKb/file-00000000a8b8824398c2d1d125682b5c.png" alt="شعار المدرسة">
+<h2>مدرسة البتانون الثانوية المطورة</h2>
+<p class="sub">🎓 الاستعلام عن النتيجة برقم الجلوس</p>
+<div class="card">
+<select id="grade">
+<option value="1">الصف الأول الثانوي</option>
+<option value="2">الصف الثاني الثانوي</option>
+<option value="3">الصف الثالث الثانوي</option>
+</select>
+<input id="seat" placeholder="اكتب رقم الجلوس"><button id="btn">عرض النتيجة</button><div id="r"></div><button id="pb" style="display:none">🖨️ اطبع النتيجة / حفظ PDF</button></div>
+<div class="footer">مدرسة البتانون الثانوية المطورة © 2026<br>Made by <b>Mohamed Khaled</b></div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getFirestore, collection, query, where, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDfMX56_f6EcNn97247Q4m2fcMbWaU-kCQ",authDomain:"school-d50aa.firebaseapp.com",projectId:"school-d50aa",storageBucket:"school-d50aa.firebasestorage.app",messagingSenderId:"14520467716",appId:"1:14520467716:web:a9874d7152ab6e4b255051"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const basic=["اللغة العربية","اللغة الأجنبية الأولى","الرياضيات","العلوم المتكاملة","التاريخ","الفلسفة والمنطق"];
+const extra=["اللغة الأجنبية الثانية","التربية الدينية","البرمجة وعلوم الحاسب"];
+function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+function normalizeSeat(s){return String(s??"").trim().replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));}
+async function go(){
+let s=normalizeSeat(document.getElementById('seat').value); if(!s) return alert("اكتب رقم الجلوس");
+let grade=document.getElementById('grade').value;
+let gradeName=document.getElementById('grade').selectedOptions[0].text;
+let btn=document.getElementById('btn'); btn.disabled=true; btn.innerText="جاري البحث...";
+document.getElementById('r').innerHTML="<div class='msg'>جاري البحث في "+esc(gradeName)+"...</div>"; document.getElementById('pb').style.display='none';
+try{
+let q=query(collection(db,"results"), where("seat","==",s), limit(10));
+let snap=await getDocs(q);
+let found=null;
+snap.forEach(d=>{
+let data=d.data();
+if(String(data.grade)===String(grade)) found=data;
+else if(!found &&!data.grade) found=data;
+});
+if(!found){document.getElementById('r').innerHTML="<div class='msg'>رقم الجلوس غير موجود في "+esc(gradeName)+"</div>"; btn.disabled=false; btn.innerText="عرض النتيجة"; return;}
+let f=found;
+let totalVal = (f.total!==undefined && f.total!=="")? f.total : (f.subjects? f.subjects["المجموع"] : "");
+let h="<h3 style='text-align:center;color:#15803d'>"+esc(f.name)+"<br><small style='color:#666'>رقم الجلوس: "+esc(f.seat)+" | "+esc(gradeName)+"</small></h3>";
+h+="<div class='sec'>المواد الأساسية (داخل المجموع)</div>";
+basic.forEach(k=>{if(f.subjects&&f.subjects[k]!==undefined&&f.subjects[k]!=="") h+="<div class='row'><span>"+esc(k)+"</span><b>"+esc(f.subjects[k])+"</b></div>";});
+if(totalVal!=="") h+="<div class='row' style='background:#f0fdf4'><span>المجموع</span><b>"+esc(totalVal)+"</b></div>";
+h+="<div class='sec'>مواد خارج المجموع</div>";
+extra.forEach(k=>{if(f.subjects&&f.subjects[k]!==undefined&&f.subjects[k]!=="") h+="<div class='row'><span>"+esc(k)+"</span><b>"+esc(f.subjects[k])+"</b></div>";});
+document.getElementById('r').innerHTML=h; document.getElementById('pb').style.display='block';
+}catch(e){document.getElementById('r').innerHTML="<div class='msg'>حصل خطأ في الاتصال</div>";}
+btn.disabled=false; btn.innerText="عرض النتيجة";
+}
+document.getElementById('btn').addEventListener('click', go);
+document.getElementById('pb').addEventListener('click', ()=>window.print());
+</script>
+</body>
+</html>
