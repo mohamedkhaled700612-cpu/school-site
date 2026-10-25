@@ -352,5 +352,10 @@ window.addQuestionText=async function(btn){
  loadQuestions();
 };
 </script>
+ <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('OneSignalSDKWorker.js');
+}
+ </script>
 </body>
   </html>
