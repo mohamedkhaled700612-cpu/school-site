@@ -230,7 +230,7 @@ function canDelete(){return curRole==="إدارة";}
 function refresh(n){let a=[...document.querySelectorAll('#tabs span')];let i=a.findIndex(s=>s.textContent==n);if(i>=0)go(n,a[i],true);}
 async function uploadToCloudinary(file){if(!file.type.startsWith('image/'))throw new Error("ارفع صورة فقط");if(file.size>5*1024*1024)throw new Error("الصورة كبيرة");const fd=new FormData();fd.append("file",file);fd.append("upload_preset",UPLOAD_PRESET);const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:fd});const data=await res.json();if(!data.secure_url)throw new Error("فشل الرفع");return data.secure_url;}
 async function notifyAll(title,body){try{await addDoc(collection(db,"notifications"),{title,body,createdAt:Date.now(),by:curName});}catch(e){}try{await fetch('https://school-notify.mohamedkhaled700612.workers.dev/',{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title,body})});}catch(e){}}
-const EXAM_DATE=new Date("2027-01-10T08:00:00").getTime();
+ const EXAM_DATE=new Date("2027-01-09T09:00:00").getTime();
 setInterval(()=>{let now=Date.now();let diff=EXAM_DATE-now;let el=document.getElementById('examCountdown');let boxes=document.getElementById('countdownBoxes');if(!el)return;if(diff<=0){el.innerText="🎉 الامتحانات بدأت!";boxes.innerHTML="";return;}let d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);el.innerText=`⏳ باقي على نصف العام`;boxes.innerHTML=`<div class="countdown-box"><b>${d}</b>يوم</div><div class="countdown-box"><b>${h}</b>ساعة</div><div class="countdown-box"><b>${m}</b>دقيقة</div><div class="countdown-box"><b>${s}</b>ثانية</div>`;},1000);
 
 // === كاش وتقسيم صفحات ===
