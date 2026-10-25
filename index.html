@@ -354,7 +354,7 @@ window.addQuestionText=async function(btn){
 </script>
  <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('OneSignalSDKWorker.js');
+  navigator.serviceWorker.register('./sw.js', { scope: './' });
 }
  </script>
 </body>
