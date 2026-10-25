@@ -429,5 +429,71 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+ <!-- مساعد البتانون الذكي - بدون مفتاح -->
+<style>
+#aiBtn{position:fixed;bottom:22px;inset-inline-start:22px;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#f5c542,#d4a017);border:2px solid #fff;color:#0a1f44;font-size:30px;cursor:pointer;box-shadow:0 14px 30px rgba(212,160,23,.5);z-index:90}
+#aiPanel{position:fixed;bottom:95px;inset-inline-start:22px;width:380px;max-width:calc(100vw - 24px);height:480px;background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.35);display:none;flex-direction:column;z-index:90;overflow:hidden;border:1px solid #e8edf4}
+#aiPanel.open{display:flex}
+#aiHead{background:linear-gradient(135deg,#132f63,#0a1f44);color:#fff;padding:14px 16px;font-weight:bold;display:flex;justify-content:space-between;align-items:center}
+#aiBody{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;background:#eef2f7}
+.aiMsg{padding:10px 14px;border-radius:14px;max-width:88%;line-height:1.7;font-size:14.5px;white-space:pre-wrap}
+.aiUser{background:#0a1f44;color:#fff;align-self:flex-end}
+.aiBot{background:#fff;border:1px solid #e2e8f0;align-self:flex-start}
+#aiFoot{display:flex;gap:8px;padding:10px;border-top:1px solid #e8edf4;background:#fff}
+#aiFoot input{flex:1;margin:0}
+</style>
+<button id="aiBtn" onclick="toggleAI()">🤖</button>
+<div id="aiPanel">
+ <div id="aiHead"><span>مساعد البتانون 🤖</span><span style="cursor:pointer" onclick="toggleAI()">✕</span></div>
+ <div id="aiBody"><div class="aiMsg aiBot">أهلا بيك 👋 انا مساعد مدرسة البتانون الذكي
+اسألني عن جدول، كتاب، خبر، سؤال...
+لو مش موجود هقولك غير متوفر الآن.</div></div>
+ <div id="aiFoot"><input id="aiInput" placeholder="اكتب سؤالك..." onkeydown="if(event.key==='Enter')askAI()"><button class="btn btn-navy" style="width:auto;margin:0" onclick="askAI()">إرسال</button></div>
+</div>
+
+<script>
+async function toggleAI(){document.getElementById('aiPanel').classList.toggle('open')}
+
+async function askAI(){
+ let input=document.getElementById('aiInput');
+ let q=input.value.trim(); if(!q) return;
+ let body=document.getElementById('aiBody');
+ body.innerHTML+=`<div class="aiMsg aiUser">${q.replace(/</g,'&lt;')}</div>`;
+ input.value='';
+ let tmpId='tmp'+Date.now();
+ body.innerHTML+=`<div class="aiMsg aiBot" id="${tmpId}">🤖 بفكر...</div>`;
+ body.scrollTop=body.scrollHeight;
+
+ // نجمع المحتوى المنشور من موقعك
+ let context="محتوى موقع مدرسة البتانون:\n";
+ try{
+  context+= "اخبار: "+ allNewsData.slice(0,15).map(x=>x.title).join(' | ')+"\n";
+  context+= "جداول: "+ _tablesData.slice(0,15).map(x=>x.title+" "+x.grade).join(' | ')+"\n";
+ }catch(e){}
+
+ let systemPrompt = `انت مساعد ذكي لموقع مدرسة البتانون الثانوية المطورة - منوفية.
+مهمتك تجاوب على اسئلة الطلبة بناء على المحتوى التالي فقط.
+لو السؤال مش موجود في المحتوى، رد بجملة: "غير متوفر الآن، تواصل مع الإدارة من تبويب تواصل."
+لا تخترع مواعيد او كتب او اخبار.
+جاوب بالعربي المصري باختصار ومفيد.
+
+المحتوى:
+${context}
+
+سؤال الطالب: ${q}`;
+
+ try{
+  // ده نموذج مجاني بدون مفتاح
+  let res = await fetch('https://text.pollinations.ai/'+encodeURIComponent(systemPrompt));
+  let text = await res.text();
+  document.getElementById(tmpId).remove();
+  if(!text) text="غير متوفر الآن، حاول تاني.";
+  body.innerHTML+=`<div class="aiMsg aiBot">${text.replace(/</g,'&lt;')}</div>`;
+ }catch(e){
+  document.getElementById(tmpId).innerHTML="غير متوفر الآن، النت ضعيف جرب تاني.";
+ }
+ body.scrollTop=body.scrollHeight;
+}
+</script>
 </body>
                                                                                                                                                                                                                                                                                                                                                   </html>
