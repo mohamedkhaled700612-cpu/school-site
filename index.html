@@ -343,5 +343,10 @@ installBtn.addEventListener('click', async () => {if(!deferredPrompt) return;def
 }
 window.addEventListener('appinstalled', () => {if(installBtn) installBtn.style.display = 'none';});
 </script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/school-site/sw.js', {scope: '/school-site/'});
+}
+    </script>
 </body>
                                                       </html>
