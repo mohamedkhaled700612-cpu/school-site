@@ -1,7 +1,7 @@
 {
   "name": "مدرسة البتانون الثانوية المطورة",
   "short_name": "البتانون",
-  "start_url": "./",
+  "start_url": "/school-site/?v=2"
   "scope": "./",
   "display": "standalone",
   "background_color": "#0a1f44",
