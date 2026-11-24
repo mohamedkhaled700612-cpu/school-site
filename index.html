@@ -358,26 +358,145 @@ async function collectSchoolContext(question){
  return `بيانات المنصة الرسمية (مصدرها قاعدة بيانات المدرسة):\n${sections.join('\n\n')}`.slice(0,18000);
 }
 function aiModeInstruction(){if(aiMode==='quiz')return 'أنشئ اختبارًا للطالب حسب الصف والمادة والدرس الذي يحدده. ابدأ بأسئلة متنوعة دون إظهار الإجابات. اطلب منه إرسال إجاباته ثم صححها مع الدرجة والتفسير.';if(aiMode==='grade')return 'صحح إجابات الطالب المرسلة فقط. وضح الإجابة الصحيحة وسبب الخطأ، وامنح درجة عادلة من مجموع واضح. إذا لم يرسل أسئلة أو نموذج إجابة، اطلب التفاصيل.';return 'اشرح بوضوح وبالتدرج وبمستوى الصف الدراسي المحدد، وقدم خطوات الحل والأمثلة عند الحاجة.';}
-window.askAI=async function(){
- let input=document.getElementById('aiInput'),q=(input.value||'').trim();if(!q&&!aiImageData)return;
- if(BATANOON_AI_WORKER.includes('YOUR-BATANOON-AI-WORKER')){alert('لسه لازم ننشر Cloudflare Worker ونضع رابطه في index.html. راجع ملف SETUP-Batanoon-AI.txt داخل الحزمة.');return;}
- let grade=document.getElementById('aiGrade')?.value||'1';let gradeName={'1':'الأول الثانوي','2':'الثاني الثانوي','3':'الثالث الثانوي'}[grade];
- let body=document.getElementById('aiBody');let userText=q||'حلل صورة السؤال واشرح المطلوب ثم الحل خطوة بخطوة.';if(aiImageData)userText+=' [أرفق الطالب صورة: '+aiImageFileName+']';
- aiHistory.push({role:'user',text:userText});renderAIHistory();input.value='';let imageToSend=aiImageData;removeAIImage();
- let temp=document.createElement('div');temp.className='aiMsg aiBot';temp.textContent='🤖 جاري تجهيز بيانات المدرسة والتفكير...';body.appendChild(temp);body.scrollTop=body.scrollHeight;
- try{
-  let context=await collectSchoolContext(q);
-  let prior=aiHistory.slice(-AI_HISTORY_LIMIT).map(m=>({role:m.role,content:m.text}));
-  let last=prior.pop();let content=[{type:'text',text:`وضع المساعد: ${aiModeInstruction()}\nالصف الدراسي: ${gradeName}\n\n${context}\n\nرسالة الطالب: ${userText}`}];
-  if(imageToSend)content.push({type:'image_url',image_url:{url:imageToSend,detail:'high'}});
-  let messages=[...prior,{role:'user',content}];
-  let resp=await fetch(BATANOON_AI_WORKER+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,grade,mode:aiMode})});
-  if(!resp.ok){let err=await resp.json().catch(()=>({}));throw new Error(err.error||`تعذر الاتصال بالمساعد (${resp.status})`);}
-  let data=await resp.json();let answer=data.answer||'لم يصل رد واضح. جرّب صياغة السؤال مرة أخرى.';let source=data.source||'الشرح التعليمي من الذكاء الاصطناعي؛ بيانات المدرسة الرسمية مذكورة عند الاستناد إليها.';
-  temp.remove();aiHistory.push({role:'assistant',text:answer,source});aiHistory=aiHistory.slice(-AI_HISTORY_LIMIT);saveAIHistory();renderAIHistory();
- }catch(err){temp.remove();aiHistory.pop();renderAIHistory();let msg=String(err.message||err);body.innerHTML+=`<div class="aiMsg aiBot">تعذر تشغيل المساعد: ${esc(msg)}<br>تأكد من نشر Cloudflare Worker وضبط مفتاح الخدمة ورابطه.</div>`;}
- body.scrollTop=body.scrollHeight;
+
+window.askAI = async function () {
+  const input = document.getElementById('aiInput');
+  const q = (input.value || '').trim();
+
+  if (!q && !aiImageData) return;
+
+  if (BATANOON_AI_WORKER.includes('YOUR-BATANOON-AI-WORKER')) {
+    alert('رابط Cloudflare Worker غير مضبوط.');
+    return;
+  }
+
+  const grade = document.getElementById('aiGrade')?.value || '1';
+  const gradeName = {
+    '1': 'الأول الثانوي',
+    '2': 'الثاني الثانوي',
+    '3': 'الثالث الثانوي'
+  }[grade];
+
+  const body = document.getElementById('aiBody');
+  const imageToSend = aiImageData;
+  const imageName = aiImageFileName;
+
+  let userText = q || 'حلل صورة السؤال واشرح المطلوب.';
+  if (imageToSend) {
+    userText += ' [أرفق الطالب صورة: ' + imageName + ']';
+  }
+
+  aiHistory.push({ role: 'user', text: userText });
+  aiHistory = aiHistory.slice(-AI_HISTORY_LIMIT);
+
+  renderAIHistory();
+  input.value = '';
+  removeAIImage();
+
+  const temp = document.createElement('div');
+  temp.className = 'aiMsg aiBot';
+  temp.textContent = '🤖 جاري تجهيز بيانات المدرسة...';
+  body.appendChild(temp);
+  body.scrollTop = body.scrollHeight;
+
+  try {
+    const context = await collectSchoolContext(q);
+
+    const prior = aiHistory
+      .slice(0, -1)
+      .slice(-8)
+      .map(m => ({
+        role: m.role,
+        content: String(m.text || '').slice(0, 4000)
+      }));
+
+    const messageContent = [
+      {
+        type: 'text',
+        text:
+          `وضع المساعد: ${aiModeInstruction()}\n` +
+          `الصف الدراسي: ${gradeName}\n\n` +
+          `${context}\n\n` +
+          `رسالة الطالب: ${userText}`
+      }
+    ];
+
+    if (imageToSend) {
+      messageContent.push({
+        type: 'image_url',
+        image_url: {
+          url: imageToSend
+        }
+      });
+    }
+
+    const messages = [
+      ...prior,
+      {
+        role: 'user',
+        content: messageContent
+      }
+    ];
+
+    const resp = await fetch(BATANOON_AI_WORKER + '/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages,
+        grade,
+        mode: aiMode
+      })
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      throw new Error(
+        data.error || `خطأ من المساعد: ${resp.status}`
+      );
+    }
+
+    const answer =
+      data.answer ||
+      'لم يصل رد واضح. حاول مرة أخرى.';
+
+    const source =
+      data.source ||
+      'الشرح التعليمي من الذكاء الاصطناعي.';
+
+    temp.remove();
+
+    aiHistory.push({
+      role: 'assistant',
+      text: answer,
+      source
+    });
+
+    aiHistory = aiHistory.slice(-AI_HISTORY_LIMIT);
+    saveAIHistory();
+    renderAIHistory();
+
+  } catch (err) {
+    temp.remove();
+
+    const message = String(err.message || err);
+
+    aiHistory.pop();
+    renderAIHistory();
+
+    const errorBox = document.createElement('div');
+    errorBox.className = 'aiMsg aiBot';
+    errorBox.textContent =
+      'تعذر تشغيل المساعد: ' + message;
+
+    body.appendChild(errorBox);
+  }
+
+  body.scrollTop = body.scrollHeight;
 };
+
 
 </script>
 <script>
