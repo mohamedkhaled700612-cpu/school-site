@@ -116,22 +116,7 @@ body.dark input,body.dark textarea,body.dark select{background:#0f172a;color:#ff
 .countdown-box b{font-size:22px;color:var(--gold2);display:block}
 #aiBtn{position:fixed;bottom:22px;inset-inline-start:22px;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#f5c542,#d4a017);border:2px solid #fff;color:#0a1f44;font-size:30px;cursor:pointer;box-shadow:0 14px 30px rgba(212,160,23,.5);z-index:90;display:flex;align-items:center;justify-content:center}
 #aiPanel{position:fixed;bottom:95px;inset-inline-start:22px;width:380px;max-width:calc(100vw - 24px);height:480px;background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.35);display:none;flex-direction:column;z-index:90;overflow:hidden;border:1px solid #e8edf4}
-#aiPanel.open{display:flex;animation:aiPanelEnter .38s cubic-bezier(.2,.85,.25,1) both}
-@keyframes aiPanelEnter{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-#aiBtn{animation:aiButtonPulse 3s ease-in-out infinite;transition:transform .25s,box-shadow .25s}
-#aiBtn:hover{transform:translateY(-3px) scale(1.06)}
-#aiBtn.waiting{animation:aiButtonThinking 1.1s ease-in-out infinite}
-@keyframes aiButtonPulse{0%,100%{box-shadow:0 14px 30px rgba(212,160,23,.42)}50%{box-shadow:0 14px 36px rgba(212,160,23,.72),0 0 0 7px rgba(212,160,23,.10)}}
-@keyframes aiButtonThinking{0%,100%{transform:scale(1);filter:saturate(1)}50%{transform:scale(1.09);filter:saturate(1.35)}}
-.aiMsg.is-new{animation:aiMessageEnter .38s cubic-bezier(.2,.8,.25,1) both}
-.aiUser.is-new{transform-origin:bottom right}
-.aiBot.is-new{transform-origin:bottom left}
-@keyframes aiMessageEnter{from{opacity:0;transform:translateY(13px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.aiTyping{display:flex;align-items:center;gap:6px;min-width:68px;min-height:38px}
-.aiTyping span{width:7px;height:7px;border-radius:50%;background:#d4a017;animation:aiDotBounce .9s ease-in-out infinite}
-.aiTyping span:nth-child(2){animation-delay:.15s}.aiTyping span:nth-child(3){animation-delay:.3s}
-@keyframes aiDotBounce{0%,60%,100%{transform:translateY(0);opacity:.55}30%{transform:translateY(-6px);opacity:1}}
-@media(prefers-reduced-motion:reduce){#aiBtn,#aiPanel.open,.aiMsg.is-new,.aiTyping span{animation:none!important;transition:none!important}}
+#aiPanel.open{display:flex}
 #aiHead{gap:10px}
 .aiTools{display:flex;gap:6px;flex-wrap:wrap;padding:8px 10px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
 .aiTools button,.aiTools select{border:1px solid #dbe3ef;border-radius:10px;padding:7px 9px;background:#fff;color:#0a1f44;font-size:12px;font-weight:700}
@@ -156,6 +141,37 @@ body.dark .aiTools button,body.dark .aiTools select{background:#1e293b;color:#e2
 body.dark #aiPanel{background:#1e293b;border-color:#334155}
 body.dark #aiBody{background:#0b1220}
 body.dark .aiBot{background:#1e293b;color:#e2e8f0;border-color:#334155}
+
+/* Batanoon AI 3.0 */
+#aiBtn{transition:transform .25s,box-shadow .25s;animation:aiPulse 3s infinite}
+#aiBtn:hover{transform:translateY(-3px) scale(1.04)}
+@keyframes aiPulse{0%,100%{box-shadow:0 14px 30px rgba(212,160,23,.35)}50%{box-shadow:0 14px 38px rgba(212,160,23,.65)}}
+#aiPanel{transition:opacity .22s,transform .22s;transform-origin:bottom left}
+#aiPanel.open{animation:aiPanelIn .24s ease-out}
+@keyframes aiPanelIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+#aiHead small{display:block;font-size:11px;font-weight:400;opacity:.8;margin-top:3px}
+.aiMsg{animation:aiMessageIn .22s ease-out}
+@keyframes aiMessageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.aiTyping{display:flex;gap:5px;align-items:center;min-height:24px}
+.aiTyping i{width:7px;height:7px;border-radius:50%;background:#d4a017;animation:aiDot 1s infinite ease-in-out}
+.aiTyping i:nth-child(2){animation-delay:.15s}.aiTyping i:nth-child(3){animation-delay:.3s}
+@keyframes aiDot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-5px);opacity:1}}
+.aiActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:7px;border-top:1px solid #e5e7eb}
+.aiActions button{border:1px solid #dbe3ef;background:#f8fafc;color:#18345e;border-radius:8px;padding:5px 8px;font-size:11px;cursor:pointer}
+.aiActions button:disabled{opacity:.4}
+.aiMsg.aiBot .aiFormatted p{margin:5px 0}
+.aiMsg.aiBot .aiFormatted h1,.aiMsg.aiBot .aiFormatted h2,.aiMsg.aiBot .aiFormatted h3{margin:8px 0;font-size:15px}
+.aiMsg.aiBot .aiFormatted ul,.aiMsg.aiBot .aiFormatted ol{padding-inline-start:22px;margin:5px 0}
+.aiMsg.aiBot .aiFormatted code{background:#eef2f7;border-radius:5px;padding:2px 5px;direction:ltr;unicode-bidi:plaintext}
+.aiMsg.aiBot .aiFormatted pre{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;padding:10px;border-radius:9px;overflow:auto;direction:ltr;text-align:left}
+.aiMsg.aiBot .aiFormatted strong{font-weight:800}
+.aiSource{font-size:11px;opacity:.8;margin-top:8px;border-top:1px solid #e2e8f0;padding-top:6px}
+#aiVoiceStatus{font-size:11px;color:#64748b;padding:0 10px 5px;min-height:16px}
+#aiVoiceBtn.listening{background:#fee2e2;color:#b91c1c;animation:aiPulse 1s infinite}
+#aiStopBtn:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:480px){#aiPanel{height:min(78dvh,700px);max-height:calc(100dvh - 105px);bottom:82px;inset-inline-start:8px;width:calc(100vw - 16px);border-radius:18px}#aiFoot{gap:5px;padding:8px}#aiFoot button{min-width:36px;padding:8px}#aiFoot input{font-size:14px} .aiTools{gap:5px}.aiTools button,.aiTools select{padding:7px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){#aiBtn,#aiPanel,.aiMsg,.aiTyping i{animation:none!important;transition:none!important}}
+
 </style>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
@@ -185,21 +201,30 @@ OneSignalDeferred.push(async function(OneSignal){
 <div class="footer">مدرسة البتانون الثانوية المطورة © 2026<br>Made by <b>Mohamed Khaled</b></div>
 </div>
 <button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button><div id="toast"></div><div id="lightbox" onclick="closeImg()"><button id="lbClose">✕</button><img id="lbImg"></div>
-<button id="aiBtn" onclick="toggleAI()">🤖</button>
-<div id="aiPanel">
-<div id="aiHead"><span>Batanoon AI 2.0 🤖</span><span style="cursor:pointer" onclick="toggleAI()">✕</span></div>
+<button id="aiBtn" onclick="toggleAI()" aria-label="فتح المساعد الذكي">🤖</button>
+<div id="aiPanel" aria-label="Batanoon AI 3.0">
+<div id="aiHead"><span><b>Batanoon AI 3.0</b><small id="aiRoleLabel">المدرس الذكي</small></span><span style="cursor:pointer" onclick="toggleAI()">✕</span></div>
 <div class="aiTools">
 <select id="aiGrade" aria-label="الصف الدراسي"><option value="1">أولى ثانوي</option><option value="2">تانية ثانوي</option><option value="3">تالتة ثانوي</option></select>
 <button type="button" id="aiExplainBtn" class="active" onclick="setAIMode('explain',this)">📚 شرح</button>
 <button type="button" id="aiQuizBtn" onclick="setAIMode('quiz',this)">📝 اختبار</button>
 <button type="button" id="aiGradeBtn" onclick="setAIMode('grade',this)">✅ تصحيح</button>
+<button type="button" id="aiSearchBtn" onclick="setAIMode('search',this)">🔎 بحث المدرسة</button>
+<button type="button" id="aiTeacherBtn" class="role-ai-tool" onclick="setAIMode('teacher',this)" style="display:none">👨‍🏫 مساعد المعلم</button>
+<button type="button" id="aiAdminBtn" class="role-ai-tool" onclick="setAIMode('admin',this)" style="display:none">🏫 مساعد الإدارة</button>
 <button type="button" onclick="clearAIChat()">مسح المحادثة</button>
 </div>
-<div id="aiBody"><div class="aiMsg aiBot">أهلاً بيك في Batanoon AI 2.0 👋
-اسأل عن المدرسة أو درس، أو اطلب اختبارًا. تقدر كمان تبعت صورة سؤال.
-المعلومات الرسمية هتكون مميزة عن الشرح العام.</div></div>
+<div id="aiBody" aria-live="polite"><div class="aiMsg aiBot">أهلاً بك في Batanoon AI 3.0. اسأل عن المدرسة أو درس، أو اطلب اختبارًا. يمكنك أيضًا التحدث أو إرسال صورة سؤال.</div></div>
 <div id="aiImagePreview"><img id="aiImageThumb" alt="معاينة السؤال"><span id="aiImageName" style="font-size:12px;flex:1"></span><button type="button" onclick="removeAIImage()">✕</button></div>
-<div id="aiFoot"><input id="aiInput" placeholder="اكتب سؤالك أو إجابتك..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();askAI()}"><input id="aiImageFile" type="file" accept="image/*" hidden onchange="selectAIImage(this)"><button id="aiImageBtn" type="button" onclick="document.getElementById('aiImageFile').click()" title="إرفاق صورة">📷</button><button class="btn btn-navy" style="width:auto;margin:0" onclick="askAI()">إرسال</button></div>
+<div id="aiFoot">
+<input id="aiInput" placeholder="اكتب سؤالك أو إجابتك..." autocomplete="off" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();askAI()}">
+<input id="aiImageFile" type="file" accept="image/*" hidden onchange="selectAIImage(this)">
+<button id="aiImageBtn" type="button" onclick="document.getElementById('aiImageFile').click()" title="إرفاق صورة">📷</button>
+<button id="aiVoiceBtn" type="button" onclick="toggleAIVoice()" title="التحدث صوتيًا">🎙️</button>
+<button id="aiStopBtn" type="button" onclick="stopAIResponse()" title="إيقاف الرد" disabled>■</button>
+<button class="btn btn-navy" id="aiSendBtn" type="button" style="width:auto;margin:0" onclick="askAI()">إرسال</button>
+</div>
+<div id="aiVoiceStatus" aria-live="polite"></div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
@@ -238,7 +263,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeImg();document
 window.toggleTheme=function(){document.body.classList.toggle('dark');localStorage.setItem('th',document.body.classList.contains('dark')?'d':'l');};
 if(localStorage.getItem('th')==='d')document.body.classList.add('dark');
 window.login=async function(){let e=document.getElementById('u').value.trim(),pw=document.getElementById('p').value;if(!e||!pw)return alert("اكتب الإيميل والباسورد");try{await signInWithEmailAndPassword(auth,e,pw);}catch(er){alert("فشل الدخول");}};
-onAuthStateChanged(auth,(user)=>{if(user){window.aiUserKey=user.uid;loadAIHistory();let inf=getRole(user.email);curRole=inf.r;curName=inf.n;document.getElementById('loginPage').style.display='none';document.getElementById('dash').style.display='flex';document.getElementById('w').innerText="أهلاً "+curName;document.getElementById('rb').innerText=curRole;startNotifications();let t=["الأخبار","الجداول","الملفات","النتائج","الأوائل","الشكاوى","بنك الأسئلة","تواصل"];if(curRole==="إدارة") t.push("قفل الوزارة");let tb=document.getElementById('tabs');tb.innerHTML=t.map((x,i)=>`<span class="${i==0?'on':''}">${esc(x)}</span>`).join("");[...tb.children].forEach((sp,ix)=>sp.onclick=()=>go(t[ix],sp));go(t[0],tb.children[0]);checkWizLock();}else{window.aiUserKey='guest';document.getElementById('loginPage').style.display='flex';document.getElementById('dash').style.display='none';}});
+onAuthStateChanged(auth,(user)=>{if(user){window.aiUserKey=user.uid;window.getAIAuthToken=()=>auth.currentUser?auth.currentUser.getIdToken():Promise.resolve(null);let inf=getRole(user.email);curRole=inf.r;curName=inf.n;loadAIHistory();updateAIForRole();document.getElementById('loginPage').style.display='none';document.getElementById('dash').style.display='flex';document.getElementById('w').innerText="أهلاً "+curName;document.getElementById('rb').innerText=curRole;startNotifications();let t=["الأخبار","الجداول","الملفات","النتائج","الأوائل","الشكاوى","بنك الأسئلة","تواصل"];if(curRole==="إدارة") t.push("قفل الوزارة");let tb=document.getElementById('tabs');tb.innerHTML=t.map((x,i)=>`<span class="${i==0?'on':''}">${esc(x)}</span>`).join("");[...tb.children].forEach((sp,ix)=>sp.onclick=()=>go(t[ix],sp));go(t[0],tb.children[0]);checkWizLock();}else{window.aiUserKey='guest';document.getElementById('loginPage').style.display='flex';document.getElementById('dash').style.display='none';}});
 window.logout=async function(){await signOut(auth);};
 function canEdit(){return curRole==="إدارة"||curRole==="معلم";}
 function canDelete(){return curRole==="إدارة";}
@@ -342,199 +367,172 @@ window.addWizLock=async function(){let d=document.getElementById('wizDate').valu
 window.loadWizLocks=async function(){let snap=await getDocs(query(collection(db,"wizaraLocks"),orderBy("date")));let el=document.getElementById('wizList'); if(!el) return;el.innerHTML=snap.empty?emptyState("📅","مفيش اقفال",""):snap.docs.map(docu=>{let x=docu.data(); return `<div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid #e2e8f0"><b>${esc(x.date)} من ${esc(x.start)} لـ ${esc(x.end)} - ${esc(x.subject)}</b><button class="btn-del" onclick="delAny('wizaraLocks','${docu.id}','قفل الوزارة')">حذف</button></div>`}).join("");}
 window.checkWizLock=async function(){try{if(typeof curRole!=='undefined' && curRole==="إدارة") return false;let snap=await getDocs(collection(db,"wizaraLocks"));if(snap.empty) return false;let now=new Date();let yyyy=now.getFullYear();let mm=String(now.getMonth()+1).padStart(2,'0');let dd=String(now.getDate()).padStart(2,'0');let today=`${yyyy}-${mm}-${dd}`;let nowM=now.getHours()*60+now.getMinutes();for(let docu of snap.docs){let ex=docu.data();if(!ex.date) continue;if(ex.date===today){let [sh,sm]=ex.start.split(':').map(Number); let [eh,em]=ex.end.split(':').map(Number);let startM=sh*60+sm; let endM=eh*60+em;if(nowM>=startM && nowM<=endM){let remainingMs = (endM - nowM) * 60000 - (now.getSeconds()*1000);let remainingMin = Math.max(1, endM - nowM);document.body.innerHTML=`<div style="height:100vh;background:#0a1f44;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:30px"><div style="font-size:80px">🚫</div><h1 style="color:#f5c542;margin:20px 0">الموقع مغلق حاليا</h1><p style="font-size:20px">يوجد الآن امتحان وزارة<br><b>${esc(ex.subject)}</b><br>من ${esc(ex.start)} حتى ${esc(ex.end)}</p><p style="margin-top:20px;background:rgba(255,255,255,.1);padding:12px 20px;border-radius:12px">تم إغلاق المنصة لمنع الغش<br>التزاما بتعليمات وزارة التربية والتعليم</p><p style="margin-top:30px;font-size:14px;opacity:.9">سيفتح تلقائيا بعد ${remainingMin} دقيقة</p></div>`;setTimeout(()=>{ location.reload(); }, remainingMs + 2000);return true;}}}}catch(e){console.log("WizLock Error", e);}return false;}
 checkWizLock();setInterval(checkWizLock, 60000);
-// ===== Batanoon AI 2.0 =====
+// ===== Batanoon AI 3.0 =====
 const BATANOON_AI_WORKER = "https://batanoon-ai.mohamedkhaled700612.workers.dev";
-const AI_HISTORY_LIMIT = 12;
-let aiMode = "explain";
-let aiHistory = [];
-let aiImageData = "";
-let aiImageFileName = "";
+const AI_HISTORY_LIMIT = 16;
+let aiMode = "explain", aiHistory = [], aiImageData = "", aiImageFileName = "";
+let aiAbortController = null, aiLastRequest = null, aiRecognition = null, aiIsSpeaking = false;
 function aiHistoryKey(){return "batanoon_ai_history_"+(window.aiUserKey||"guest");}
-window.loadAIHistory=function(){try{aiHistory=JSON.parse(localStorage.getItem(aiHistoryKey())||"[]");if(!Array.isArray(aiHistory))aiHistory=[];}catch(e){aiHistory=[];}renderAIHistory();};
+function aiEscape(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+function aiFormat(text){
+ let s=aiEscape(text);
+ s=s.replace(/```([\s\S]*?)```/g,'<pre><code>$1</code></pre>');
+ s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+ s=s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+ s=s.replace(/^### (.*)$/gm,'<h3>$1</h3>').replace(/^## (.*)$/gm,'<h2>$1</h2>').replace(/^# (.*)$/gm,'<h1>$1</h1>');
+ s=s.replace(/^\s*[-*] (.*)$/gm,'• $1');
+ return s.replace(/\n/g,'<br>');
+}
+function aiActionsHTML(index,isLatest){
+ return `<div class="aiActions">
+ <button type="button" onclick="copyAIMessage(${index})">📋 نسخ</button>
+ <button type="button" onclick="speakAIMessage(${index})">🔊 استمع</button>
+ ${isLatest?`<button type="button" onclick="regenerateAI()">🔄 إعادة الرد</button>`:''}
+ <button type="button" onclick="rateAI(${index},'good')">👍</button>
+ <button type="button" onclick="rateAI(${index},'bad')">👎</button>
+ </div>`;
+}
+window.loadAIHistory=function(){try{aiHistory=JSON.parse(localStorage.getItem(aiHistoryKey())||"[]");if(!Array.isArray(aiHistory))aiHistory=[];}catch(e){aiHistory=[];}renderAIHistory();updateAIForRole();};
 function saveAIHistory(){try{localStorage.setItem(aiHistoryKey(),JSON.stringify(aiHistory.slice(-AI_HISTORY_LIMIT)));}catch(e){}}
-function renderAIHistory(animateLast=false){let body=document.getElementById('aiBody');if(!body)return;let welcome='<div class="aiMsg aiBot">أهلاً بيك في Batanoon AI 2.0 👋<br>اسأل عن المدرسة أو درس، أو اطلب اختبارًا. تقدر كمان تبعت صورة سؤال.<br>المعلومات الرسمية هتكون مميزة عن الشرح العام.</div>';body.innerHTML=welcome+aiHistory.map((m,i)=>`<div class="aiMsg ${m.role==='user'?'aiUser':'aiBot'} ${animateLast&&i===aiHistory.length-1?'is-new':''}">${esc(m.text||'')}${m.source?`<div class="aiSource">${esc(m.source)}</div>`:''}</div>`).join('');body.scrollTop=body.scrollHeight;}
-window.setAIMode=function(mode,btn){aiMode=mode;document.querySelectorAll('.aiTools button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');let input=document.getElementById('aiInput');if(input){input.placeholder=mode==='quiz'?'اكتب المادة والدرس وعدد الأسئلة...':mode==='grade'?'اكتب إجاباتك أو ارفع صورة الحل...':'اكتب سؤالك أو إجابتك...';}};
+function renderAIHistory(){
+ const body=document.getElementById('aiBody');if(!body)return;
+ const welcome='<div class="aiMsg aiBot">أهلاً بك في <b>Batanoon AI 3.0</b> 👋<br>اسأل عن المدرسة أو درس، أو اطلب اختبارًا. يمكنك التحدث صوتيًا أو إرسال صورة سؤال.</div>';
+ body.innerHTML=welcome+aiHistory.map((m,i)=>{
+  const cls=m.role==='user'?'aiUser':'aiBot';
+  return `<div class="aiMsg ${cls}">${m.role==='assistant'?`<div class="aiFormatted">${aiFormat(m.text||'')}</div>`:aiEscape(m.text||'')}${m.source?`<div class="aiSource">${aiEscape(m.source)}</div>`:''}${m.role==='assistant'?aiActionsHTML(i,i===aiHistory.length-1):''}</div>`;
+ }).join('');
+ body.scrollTop=body.scrollHeight;
+}
+function updateAIForRole(){
+ const role=typeof curRole==='undefined'?'طالب':curRole;
+ const teacher=document.getElementById('aiTeacherBtn'),admin=document.getElementById('aiAdminBtn'),label=document.getElementById('aiRoleLabel');
+ if(teacher)teacher.style.display=role==='معلم'?'':'none';
+ if(admin)admin.style.display=role==='إدارة'?'':'none';
+ if(label)label.textContent=role==='إدارة'?'مساعد الإدارة':role==='معلم'?'مساعد المعلم':'المدرس الذكي';
+ if((aiMode==='teacher'&&role!=='معلم')||(aiMode==='admin'&&role!=='إدارة'))setAIMode('explain',document.getElementById('aiExplainBtn'));
+}
+window.setAIMode=function(mode,btn){
+ const role=typeof curRole==='undefined'?'طالب':curRole;
+ if(mode==='teacher'&&role!=='معلم'||mode==='admin'&&role!=='إدارة'){alert('هذه الخاصية غير متاحة لهذا الحساب.');return;}
+ aiMode=mode;document.querySelectorAll('.aiTools button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+ const input=document.getElementById('aiInput');
+ const hints={quiz:'اكتب المادة والدرس وعدد الأسئلة...',grade:'اكتب إجاباتك أو ارفع صورة الحل...',search:'ابحث عن إعلان أو جدول أو ملف منشور...',teacher:'كيف أستطيع مساعدتك في إعداد الدروس أو الأسئلة؟',admin:'ما المعلومة أو الإجراء الإداري الذي تريد المساعدة فيه؟',explain:'اكتب سؤالك أو إجابتك...'};
+ if(input)input.placeholder=hints[mode]||hints.explain;
+};
 window.clearAIChat=function(){if(!confirm('تمسح سجل المحادثة المحفوظ على هذا الجهاز؟'))return;aiHistory=[];saveAIHistory();renderAIHistory();};
 window.selectAIImage=function(el){let f=el.files&&el.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('اختار صورة فقط');el.value='';return;}if(f.size>5*1024*1024){alert('حجم الصورة لازم يكون أقل من 5 ميجابايت');el.value='';return;}let reader=new FileReader();reader.onload=()=>{aiImageData=reader.result;aiImageFileName=f.name;document.getElementById('aiImageThumb').src=aiImageData;document.getElementById('aiImageName').textContent=f.name;document.getElementById('aiImagePreview').style.display='flex';};reader.readAsDataURL(f);};
 window.removeAIImage=function(){aiImageData='';aiImageFileName='';let f=document.getElementById('aiImageFile');if(f)f.value='';document.getElementById('aiImagePreview').style.display='none';};
-window.toggleAI=function(){document.getElementById('aiPanel').classList.toggle('open');document.getElementById('aiInput')?.focus();};
+window.toggleAI=function(){document.getElementById('aiPanel').classList.toggle('open');if(document.getElementById('aiPanel').classList.contains('open'))document.getElementById('aiInput')?.focus();};
 async function collectSchoolContext(question){
- const collections=[['news','الأخبار'],['tables','الجداول'],['files','الكتب والملفات'],['questions','بنك الأسئلة']];
- let sections=[];let terms=(question||'').toLowerCase().split(/[\s،,.!?؟]+/).filter(w=>w.length>2);
- for(const [name,label] of collections){try{let snap=await getDocs(query(collection(db,name),orderBy('createdAt','desc'),limit(100)));let rows=snap.docs.map(d=>({id:d.id,...d.data()}));let text=rows.map(x=>{
-  if(name==='news')return `- ${x.title||''}: ${x.details||''}`;
-  if(name==='tables')return `- ${x.title||''} | الصف ${x.grade||'غير محدد'} | ${x.day||''} | ${x.details||''} | صورة/ملف: ${x.url||''}`;
-  if(name==='files')return `- ${x.title||''} | الصف ${x.grade||'غير محدد'} | رابط: ${x.url||''}`;
-  return `- ${x.subject||'عام'} | الصف ${x.grade||'غير محدد'} | السؤال: ${x.text||x.title||''} | الإجابة المنشورة: ${x.answer||'غير متاحة'}`;
- }).map(t=>({t,score:terms.reduce((n,w)=>n+(t.toLowerCase().includes(w)?1:0),0)})).sort((a,b)=>b.score-a.score).slice(0,30).map(x=>x.t);
- sections.push(`## ${label}\n${text.join('\n')||'لا توجد بيانات منشورة.'}`);
- }catch(err){sections.push(`## ${label}\nتعذر قراءة هذا القسم بسبب صلاحيات أو اتصال.`);}
+ const collections=[['news','الأخبار المنشورة'],['tables','الجداول المنشورة'],['files','الكتب والملفات المنشورة'],['questions','بنك الأسئلة المنشور']];
+ let sections=[],terms=(question||'').toLowerCase().split(/[\s،,.!?؟]+/).filter(w=>w.length>2);
+ for(const [name,label] of collections){
+  try{
+   const snap=await getDocs(query(collection(db,name),orderBy('createdAt','desc'),limit(100)));
+   const rows=snap.docs.map(d=>({id:d.id,...d.data()}));
+   const scored=rows.map(x=>{
+    let t=name==='news'?`العنوان: ${x.title||''} التفاصيل: ${x.details||''}`:name==='tables'?`العنوان: ${x.title||''} الصف: ${x.grade||''} اليوم: ${x.day||''} التفاصيل: ${x.details||''} الرابط: ${x.url||''}`:name==='files'?`العنوان: ${x.title||''} الصف: ${x.grade||''} الرابط: ${x.url||''}`:`المادة: ${x.subject||'عام'} الصف: ${x.grade||''} السؤال: ${x.text||x.title||''} الإجابة المنشورة: ${x.answer||'غير متاحة'}`;
+    return {t,score:terms.reduce((n,w)=>n+(t.toLowerCase().includes(w)?1:0),0)};
+   }).sort((a,b)=>b.score-a.score).slice(0,18);
+   sections.push(`## ${label}\n${scored.map(x=>'- '+x.t).join('\n')||'لا توجد بيانات منشورة.'}`);
+  }catch(err){sections.push(`## ${label}\nتعذر قراءة هذا القسم؛ لا تعتبره خاليًا من البيانات.`);}
  }
- return `بيانات المنصة الرسمية (مصدرها قاعدة بيانات المدرسة):\n${sections.join('\n\n')}`.slice(0,18000);
+ return `بيانات المنصة الرسمية (من مجموعات المنشورات العامة فقط؛ لا تشمل سجلات الطلاب أو الشكاوى أو النتائج الخاصة):\n${sections.join('\n\n')}`.slice(0,18000);
 }
-function aiModeInstruction(){if(aiMode==='quiz')return 'أنشئ اختبارًا للطالب حسب الصف والمادة والدرس الذي يحدده. ابدأ بأسئلة متنوعة دون إظهار الإجابات. اطلب منه إرسال إجاباته ثم صححها مع الدرجة والتفسير.';if(aiMode==='grade')return 'صحح إجابات الطالب المرسلة فقط. وضح الإجابة الصحيحة وسبب الخطأ، وامنح درجة عادلة من مجموع واضح. إذا لم يرسل أسئلة أو نموذج إجابة، اطلب التفاصيل.';return 'اشرح بوضوح وبالتدرج وبمستوى الصف الدراسي المحدد، وقدم خطوات الحل والأمثلة عند الحاجة.';}
-
-// عرض رد المساعد جملةً جملةً بعد استلام الإجابة كاملة من الخادم.
-async function animateAIResponse(answer, source, messageElement){
-  messageElement.className = 'aiMsg aiBot is-new';
-  messageElement.textContent = '';
-  const chunks = String(answer || '').match(/[^.!؟?…\n]+[.!؟?…]*\s*|\n+/g) || [String(answer || '')];
-  for (const chunk of chunks){
-    messageElement.appendChild(document.createTextNode(chunk));
-    const body = document.getElementById('aiBody');
-    if(body) body.scrollTop = body.scrollHeight;
-    await new Promise(resolve => setTimeout(resolve, 170));
-  }
-  if(source){
-    const sourceBox = document.createElement('div');
-    sourceBox.className = 'aiSource';
-    sourceBox.textContent = source;
-    messageElement.appendChild(sourceBox);
-  }
+function aiModeInstruction(mode=aiMode){
+ const role=typeof curRole==='undefined'?'طالب':curRole;
+ if(mode==='quiz')return 'أنشئ اختبارًا تعليميًا حسب الصف والمادة والدرس. اسأل سؤالًا واضحًا في كل مرة أو اعرض اختبارًا قصيرًا من 5 أسئلة. لا تعرض الإجابات قبل محاولة الطالب. احتفظ بمفتاح الإجابة ضمن سياقك للتصحيح اللاحق، ولا تدّعِ أن الاختبار رسمي.';
+ if(mode==='grade')return 'صحح إجابات المستخدم مقابل الأسئلة التي ظهرت في المحادثة. اعرض الدرجة من مجموع واضح، واشرح سبب كل خطأ. إذا لم تتوفر الأسئلة أو الإجابات السابقة فاطلبها. التصحيح تدريبي وليس نتيجة رسمية.';
+ if(mode==='search')return 'ابحث في بيانات المدرسة الرسمية المرفقة فقط. أجب عن السؤال بذكر اسم المنشور أو القسم وتاريخه/صفه/رابطه إن توفرت. إذا لم تجد نتيجة مناسبة فقل ذلك صراحة ولا تخترع.';
+ if(mode==='teacher')return 'أنت مساعد المعلم. ساعد المعلم في إعداد شرح وخطة درس وأنشطة وأسئلة واختبارات ونماذج إجابة. لا تنشئ نتائج رسمية ولا تغيّر بيانات الطلاب. ميّز المحتوى المقترح عن منشورات المدرسة الرسمية.';
+ if(mode==='admin')return 'أنت مساعد الإدارة. ساعد الإدارة في تلخيص المنشورات العامة والجداول والملفات وصياغة الإعلانات والخطط. لا تدّعِ تنفيذ تغييرات في النظام ولا تعرض أو تطلب بيانات شخصية للطلاب.';
+ return 'أنت مدرس تفاعلي: اشرح على خطوات قصيرة، ثم اسأل سؤال تحقق واحدًا وانتظر إجابة الطالب قبل الانتقال. إذا طلب الطالب حلًا مباشرًا، قدم شرحًا مفهومًا لا النتيجة فقط.';
 }
-
-window.askAI = async function () {
-  const input = document.getElementById('aiInput');
-  const q = (input.value || '').trim();
-
-  if (!q && !aiImageData) return;
-
-  if (BATANOON_AI_WORKER.includes('YOUR-BATANOON-AI-WORKER')) {
-    alert('رابط Cloudflare Worker غير مضبوط.');
-    return;
+function aiTypingHTML(){return '<span class="aiTyping" aria-label="جاري الكتابة"><i></i><i></i><i></i></span>';}
+function addAIUser(text){aiHistory.push({role:'user',text});aiHistory=aiHistory.slice(-AI_HISTORY_LIMIT);}
+function appendAIStream(textNode,chunk){textNode.textContent+=chunk;const body=document.getElementById('aiBody');body.scrollTop=body.scrollHeight;}
+window.askAI=async function(isRetry=false){
+ const input=document.getElementById('aiInput'),q=(input.value||'').trim();
+ if(!isRetry&&!q&&!aiImageData)return;
+ if(aiAbortController) return;
+ if(!BATANOON_AI_WORKER)return alert('رابط Cloudflare Worker غير مضبوط.');
+ const role=typeof curRole==='undefined'?'طالب':curRole;
+ if(aiMode==='teacher'&&role!=='معلم'||aiMode==='admin'&&role!=='إدارة')return alert('هذه الخاصية غير متاحة لهذا الحساب.');
+ const activeMode=isRetry&&aiLastRequest?aiLastRequest.mode:aiMode;
+ const grade=document.getElementById('aiGrade')?.value||'1';
+ const gradeName={'1':'الأول الثانوي','2':'الثاني الثانوي','3':'الثالث الثانوي'}[grade]||'غير محدد';
+ const imageToSend=isRetry?(aiLastRequest?.image||''):aiImageData;
+ const userText=isRetry?(aiLastRequest?.text||''):q||(imageToSend?'حلل صورة السؤال واشرح المطلوب.':'');
+ if(!isRetry){
+  addAIUser(userText+(imageToSend?' [صورة مرفقة]':''));
+  input.value='';removeAIImage();renderAIHistory();saveAIHistory();
+ }
+ const body=document.getElementById('aiBody');
+ const assistant={role:'assistant',text:'',source:''};aiHistory.push(assistant);
+ const assistantIndex=aiHistory.length-1;
+ const msg=document.createElement('div');msg.className='aiMsg aiBot';
+ const content=document.createElement('div');content.className='aiFormatted';content.innerHTML=aiTypingHTML();msg.appendChild(content);body.appendChild(msg);body.scrollTop=body.scrollHeight;
+ const send=document.getElementById('aiSendBtn'),stop=document.getElementById('aiStopBtn');
+ send.disabled=true;stop.disabled=false;
+ aiAbortController=new AbortController();
+ try{
+  const context=await collectSchoolContext(userText);
+  const prior=aiHistory.slice(0,assistantIndex).slice(-10).map(m=>({role:m.role==='assistant'?'assistant':'user',content:String(m.text||'').slice(0,5000)}));
+  const messageContent=[{type:'text',text:`دور المستخدم: ${role}\nوضع المساعد: ${aiModeInstruction(activeMode)}\nالصف الدراسي: ${gradeName}\n\n${context}\n\nرسالة المستخدم: ${userText}`}];
+  if(imageToSend)messageContent.push({type:'image_url',image_url:{url:imageToSend}});
+  const token=await window.getAIAuthToken?.();
+  if(!token)throw new Error('انتهت جلسة الدخول. سجّل الدخول مرة أخرى.');
+  aiLastRequest={text:userText,image:imageToSend,grade,mode:activeMode};
+  const resp=await fetch(BATANOON_AI_WORKER+'/chat',{
+   method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+   body:JSON.stringify({messages:[...prior,{role:'user',content:messageContent}],grade,mode:activeMode}),signal:aiAbortController.signal
+  });
+  if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error||`خطأ من المساعد: ${resp.status}`);}
+  if(!resp.body)throw new Error('المتصفح لا يدعم بث الردود.');
+  const reader=resp.body.getReader(),decoder=new TextDecoder();let buffer='',gotText=false,source='شرح تعليمي مولّد بالذكاء الاصطناعي؛ بيانات المدرسة الرسمية موضحة عند الاستناد إليها.';
+  while(true){
+   const {value,done}=await reader.read();if(done)break;
+   buffer+=decoder.decode(value,{stream:true});
+   const events=buffer.split('\n\n');buffer=events.pop()||'';
+   for(const event of events){
+    const line=event.split('\n').find(x=>x.startsWith('data:'));if(!line)continue;
+    let packet;try{packet=JSON.parse(line.slice(5).trim());}catch{continue;}
+    if(packet.text){if(!gotText){content.innerHTML='';gotText=true;}assistant.text+=packet.text;content.innerHTML=aiFormat(assistant.text);body.scrollTop=body.scrollHeight;}
+    if(packet.source)source=packet.source;
+    if(packet.error)throw new Error(packet.error);
+   }
   }
-
-  const grade = document.getElementById('aiGrade')?.value || '1';
-  const gradeName = {
-    '1': 'الأول الثانوي',
-    '2': 'الثاني الثانوي',
-    '3': 'الثالث الثانوي'
-  }[grade];
-
-  const body = document.getElementById('aiBody');
-  const imageToSend = aiImageData;
-  const imageName = aiImageFileName;
-
-  let userText = q || 'حلل صورة السؤال واشرح المطلوب.';
-  if (imageToSend) {
-    userText += ' [أرفق الطالب صورة: ' + imageName + ']';
+  if(buffer.trim()){
+   const line=buffer.split('\n').find(x=>x.startsWith('data:'));
+   if(line){try{const packet=JSON.parse(line.slice(5).trim());if(packet.text){assistant.text+=packet.text;content.innerHTML=aiFormat(assistant.text);}if(packet.source)source=packet.source;}catch{}}
   }
-
-  aiHistory.push({ role: 'user', text: userText });
-  aiHistory = aiHistory.slice(-AI_HISTORY_LIMIT);
-
-  renderAIHistory(true);
-  input.value = '';
-  removeAIImage();
-
-  const temp = document.createElement('div');
-  temp.className = 'aiMsg aiBot';
-  temp.innerHTML = '<span>جاري تجهيز الرد</span><span class="aiTyping" aria-label="جاري الكتابة"><span></span><span></span><span></span></span>';
-  document.getElementById('aiBtn')?.classList.add('waiting');
-  body.appendChild(temp);
-  body.scrollTop = body.scrollHeight;
-
-  try {
-    const context = await collectSchoolContext(q);
-
-    const prior = aiHistory
-      .slice(0, -1)
-      .slice(-8)
-      .map(m => ({
-        role: m.role,
-        content: String(m.text || '').slice(0, 4000)
-      }));
-
-    const messageContent = [
-      {
-        type: 'text',
-        text:
-          `وضع المساعد: ${aiModeInstruction()}\n` +
-          `الصف الدراسي: ${gradeName}\n\n` +
-          `${context}\n\n` +
-          `رسالة الطالب: ${userText}`
-      }
-    ];
-
-    if (imageToSend) {
-      messageContent.push({
-        type: 'image_url',
-        image_url: {
-          url: imageToSend
-        }
-      });
-    }
-
-    const messages = [
-      ...prior,
-      {
-        role: 'user',
-        content: messageContent
-      }
-    ];
-
-    const resp = await fetch(BATANOON_AI_WORKER + '/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messages,
-        grade,
-        mode: aiMode
-      })
-    });
-
-    const data = await resp.json().catch(() => ({}));
-
-    if (!resp.ok) {
-      throw new Error(
-        data.error || `خطأ من المساعد: ${resp.status}`
-      );
-    }
-
-    const answer =
-      data.answer ||
-      'لم يصل رد واضح. حاول مرة أخرى.';
-
-    const source =
-      data.source ||
-      'الشرح التعليمي من الذكاء الاصطناعي.';
-
-    // ابدأ إظهار الرد تدريجيًا، جملةً بعد جملة، مع الحفاظ على سجل المحادثة.
-    await animateAIResponse(answer, source, temp);
-
-    aiHistory.push({
-      role: 'assistant',
-      text: answer,
-      source
-    });
-
-    aiHistory = aiHistory.slice(-AI_HISTORY_LIMIT);
-    saveAIHistory();
-    document.getElementById('aiBtn')?.classList.remove('waiting');
-
-  } catch (err) {
-    temp.remove();
-    document.getElementById('aiBtn')?.classList.remove('waiting');
-
-    const message = String(err.message || err);
-
-    aiHistory.pop();
-    renderAIHistory();
-
-    const errorBox = document.createElement('div');
-    errorBox.className = 'aiMsg aiBot is-new';
-    errorBox.textContent =
-      'تعذر تشغيل المساعد: ' + message;
-
-    body.appendChild(errorBox);
-  }
-
-  body.scrollTop = body.scrollHeight;
+  if(!assistant.text)throw new Error('لم يصل رد نصي من النموذج.');
+  assistant.source=source;saveAIHistory();renderAIHistory();
+ }catch(err){
+  if(err.name==='AbortError'){assistant.text=assistant.text||'تم إيقاف توليد الإجابة.';assistant.source='';saveAIHistory();renderAIHistory();}
+  else{aiHistory.splice(assistantIndex,1);const error=document.createElement('div');error.className='aiMsg aiBot';error.textContent='تعذر تشغيل المساعد: '+String(err.message||err);body.appendChild(error);saveAIHistory();}
+ }finally{
+  aiAbortController=null;send.disabled=false;stop.disabled=true;body.scrollTop=body.scrollHeight;
+ }
 };
-
-
+window.stopAIResponse=function(){if(aiAbortController)aiAbortController.abort();};
+window.regenerateAI=function(){if(!aiLastRequest||aiAbortController)return;const last=aiHistory[aiHistory.length-1];if(last?.role==='assistant')aiHistory.pop();document.getElementById('aiGrade').value=aiLastRequest.grade;askAI(true);};
+window.copyAIMessage=async function(i){const m=aiHistory[i];if(!m)return;try{await navigator.clipboard.writeText(m.text||'');if(typeof showToast==='function')showToast('تم نسخ الإجابة');}catch{alert('تعذر النسخ في هذا المتصفح.');}};
+window.speakAIMessage=function(i){const m=aiHistory[i];if(!m?.text||!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(m.text);u.lang='ar-EG';u.rate=1;window.speechSynthesis.speak(u);};
+window.rateAI=function(i,rating){if(!aiHistory[i])return;aiHistory[i].rating=rating;saveAIHistory();alert(rating==='good'?'شكرًا على تقييمك.':'شكرًا، سنحاول تحسين الإجابة.');};
+window.toggleAIVoice=function(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){alert('التعرف على الصوت غير مدعوم في هذا المتصفح. جرّب Chrome على الهاتف.');return;}
+ if(aiRecognition){aiRecognition.stop();aiRecognition=null;return;}
+ aiRecognition=new SR();aiRecognition.lang='ar-EG';aiRecognition.interimResults=true;aiRecognition.continuous=false;
+ const btn=document.getElementById('aiVoiceBtn'),status=document.getElementById('aiVoiceStatus');
+ btn.classList.add('listening');status.textContent='استمع إليك الآن... تحدث بوضوح.';
+ aiRecognition.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;if(t)document.getElementById('aiInput').value=t;};
+ aiRecognition.onerror=e=>{status.textContent='تعذر التقاط الصوت: '+e.error;};
+ aiRecognition.onend=()=>{btn.classList.remove('listening');status.textContent='';aiRecognition=null;};
+ aiRecognition.start();
+};
+window.addEventListener('beforeunload',()=>{if(aiRecognition)aiRecognition.stop();if('speechSynthesis'in window)window.speechSynthesis.cancel();});
 </script>
 <script>
 let deferredPrompt = null;
